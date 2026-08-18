@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Secrets / local config — never commit
+.env
+veritas/.env
+!veritas/.env.example
+
+# Local runtime data (encrypted object store, logs)
+veritas/data/
+*.log
