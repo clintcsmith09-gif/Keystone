@@ -13,6 +13,10 @@ dependencies = [
     "psycopg[binary]>=3.2,<4",
     "cryptography>=42,<46",
     "pydantic-settings>=2.4,<3",
+    # Parse-safety gate (§6.2): openpyxl (read_only + data_only, no formula
+    # eval) for XLSX, pyarrow for Parquet. CSV/JSON use the standard library.
+    "openpyxl>=3.1,<4",
+    "pyarrow>=17,<21",
 ]
 
 [project.optional-dependencies]
