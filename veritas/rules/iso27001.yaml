@@ -1,0 +1,210 @@
+# ISO/IEC 27001 scoped rule subset (architecture §7.3, §13 Q1).
+# Representative control checks evaluated against the normalized single-table
+# view produced by the pipeline's normalize stage ("ledger"). Findings cite
+# rule_id + standard + version. Deterministic check types run without an LLM;
+# only judgment/llm_assist rules use the LLMClient seam.
+standard: ISO-27001
+version: 1
+rules:
+  # --- Access control (A.9) ---------------------------------------------------
+  - id: ISO-27001.A.9.1.2-accessible-information
+    category: access-control
+    severity: high
+    check_type: presence
+    target: ledger
+    description: Access to information and asset functionality must be limited per the access-control policy; records must carry a principal identity.
+    params: { columns: [user_id, username] }
+    llm_assist: false
+  - id: ISO-27001.A.9.2.1-user-registration
+    category: access-control
+    severity: high
+    check_type: reference
+    target: ledger
+    description: Unique registration of each user; user_id must be non-null and unique.
+    params: { column: user_id }
+    llm_assist: false
+  - id: ISO-27001.A.9.2.2-user-access-provisioning
+    category: access-control
+    severity: medium
+    check_type: reference
+    target: ledger
+    description: Each user must be provisioned at most one authoritative record; username unique where present.
+    params: { column: username, nullable: true }
+    llm_assist: false
+  - id: ISO-27001.A.9.2.5-review-user-access
+    category: access-control
+    severity: low
+    check_type: presence
+    target: ledger
+    description: Records should expose a role so access reviews can be scoped.
+    params: { columns: [role], allow_missing: false }
+    llm_assist: false
+  - id: ISO-27001.A.9.2.6-removal-access
+    category: access-control
+    severity: medium
+    check_type: presence
+    target: ledger
+    description: Terminated/leavers must be identifiable via a status field.
+    params: { columns: [status] }
+    llm_assist: false
+  - id: ISO-27001.A.9.3.1-sole-use
+    category: access-control
+    severity: medium
+    check_type: threshold
+    target: ledger
+    description: Every row must carry exactly one principal (no empty user_id) - sole-use accountability.
+    params: { column: user_id, op: "ne", value: "", per_row: true }
+    llm_assist: false
+  - id: ISO-27001.A.9.4.2-secure-log-on
+    category: access-control
+    severity: high
+    check_type: presence
+    target: ledger
+    description: Authentication events should record a timestamp and source for secure log-on review.
+    params: { columns: [timestamp, source_ip] }
+    llm_assist: false
+  # --- Asset management (A.8) -------------------------------------------------
+  - id: ISO-27001.A.8.1.1-inventory
+    category: asset-management
+    severity: medium
+    check_type: presence
+    target: ledger
+    description: An asset inventory must identify owners; records should carry an owner/account reference.
+    params: { columns: [account_id] }
+    llm_assist: false
+  - id: ISO-27001.A.8.2.1-classification
+    category: asset-management
+    severity: low
+    check_type: presence
+    target: ledger
+    description: Information should be classified; a classification/type column should exist.
+    params: { columns: [classification], allow_missing: true }
+    llm_assist: false
+  # --- Information security risk & incident (A.5/A.16) -------------------------
+  - id: ISO-27001.A.5.1.1-policy
+    category: security-policy
+    severity: info
+    check_type: judgment
+    target: ledger
+    description: Confirm documented policy artifacts are evident in the submission (judgment-assisted review).
+    params: {}
+    llm_assist: true
+    prompt_template: iso27001-judgment-v1
+  - id: ISO-27001.A.16.1.4-detect-incidents
+    category: incident-management
+    severity: high
+    check_type: presence
+    target: ledger
+    description: Event/audit logs must carry an event type so incidents can be detected.
+    params: { columns: [event_type] }
+    llm_assist: false
+  - id: ISO-27001.A.16.1.5-response
+    category: incident-management
+    severity: medium
+    check_type: presence
+    target: ledger
+    description: Log records must be attributable to a time (timestamp) for response correlation.
+    params: { columns: [timestamp] }
+    llm_assist: false
+  # --- Operations security (A.12) ---------------------------------------------
+  - id: ISO-27001.A.12.1.1-operating-procedures
+    category: operations
+    severity: medium
+    check_type: format
+    target: ledger
+    description: Primary identifiers must be well-formed (no whitespace/control chars).
+    params: { column: user_id, pattern: "^\\S+$" }
+    llm_assist: false
+  - id: ISO-27001.A.12.3.1-backup
+    category: operations
+    severity: high
+    check_type: presence
+    target: ledger
+    description: Backup/retention evidence must be present; a backup_time column should exist.
+    params: { columns: [backup_time], allow_missing: true }
+    llm_assist: false
+  - id: ISO-27001.A.12.4.1-event-logging
+    category: operations
+    severity: high
+    check_type: threshold
+    target: ledger
+    description: Auditable event log must have records; require at least one row.
+    params: { op: "ge", value: 1, per_row: false, aggregate: "row_count" }
+    llm_assist: false
+  - id: ISO-27001.A.12.4.3-clock-sync
+    category: operations
+    severity: medium
+    check_type: format
+    target: ledger
+    description: Timestamps must be ISO-8601 formatted.
+    params: { column: timestamp, pattern: "^\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}" }
+    llm_assist: false
+  - id: ISO-27001.A.12.6.1-vulnerability-management
+    category: operations
+    severity: medium
+    check_type: presence
+    target: ledger
+    description: Records should expose a status/patch field for vulnerability management review.
+    params: { columns: [patch_level], allow_missing: true }
+    llm_assist: false
+  # --- Communication security (A.13) ------------------------------------------
+  - id: ISO-27001.A.13.1.1-network-controls
+    category: communications
+    severity: medium
+    check_type: format
+    target: ledger
+    description: Source IPs, where present, must be a plausible IP address.
+    params: { column: source_ip, pattern: "^\\d{1,3}(\\.\\d{1,3}){3}$", allow_missing: true }
+    llm_assist: false
+  - id: ISO-27001.A.13.2.1-transfer-policy
+    category: communications
+    severity: medium
+    check_type: presence
+    target: ledger
+    description: Transfers should be attributable; a transaction id column should exist.
+    params: { columns: [transaction_id], allow_missing: true }
+    llm_assist: false
+  # --- Supplier relationships (A.15) ------------------------------------------
+  - id: ISO-27001.A.15.1.1-supplier-policy
+    category: suppliers
+    severity: low
+    check_type: judgment
+    target: ledger
+    description: Assess whether supplier-related records are present and attributable (judgment-assisted).
+    params: {}
+    llm_assist: true
+    prompt_template: iso27001-judgment-v1
+  # --- Data integrity & classification of sensitive fields --------------------
+  - id: ISO-27001.integrity.1-non-repudiation
+    category: integrity
+    severity: high
+    check_type: reference
+    target: ledger
+    description: Primary keys must be unique and non-null for non-repudiation.
+    params: { column: transaction_id, nullable: true }
+    llm_assist: false
+  # --- Boundary/scope guards (representative placeholder rules) ----------------
+  - id: ISO-27001.scope.1-required-field-empty
+    category: data-quality
+    severity: medium
+    check_type: threshold
+    target: ledger
+    description: Required status field must not be empty on any row.
+    params: { column: status, op: "ne", value: "", per_row: true }
+    llm_assist: false
+  - id: ISO-27001.scope.2-email-format
+    category: data-quality
+    severity: low
+    check_type: format
+    target: ledger
+    description: Email addresses, where present, must be well-formed.
+    params: { column: email, pattern: "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$", allow_missing: true }
+    llm_assist: false
+  - id: ISO-27001.scope.3-role-allowed
+    category: access-control
+    severity: high
+    check_type: format
+    target: ledger
+    description: Role values must come from an allowlist (least-privilege governance).
+    params: { column: role, allowed: [admin, analyst, auditor, compliance, viewer], allow_missing: true }
+    llm_assist: false

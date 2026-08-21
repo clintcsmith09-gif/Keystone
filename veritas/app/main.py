@@ -19,8 +19,9 @@ from fastapi import FastAPI
 from .config import get_settings
 from .storage import get_storage
 from .uploads.api import router as uploads_router
+from .audit.api import router as audit_router
 
-VERSION = "0.2.0"
+VERSION = "0.3.0"
 SERVICE = "veritas"
 
 
@@ -41,6 +42,7 @@ app = FastAPI(
 )
 
 app.include_router(uploads_router, prefix="/api/v1")
+app.include_router(audit_router, prefix="/api/v1")
 
 
 @app.get("/health")
