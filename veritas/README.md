@@ -103,3 +103,25 @@ AES-256-GCM everywhere, so every read verifies integrity (tamper → `StorageInt
 `delete()` overwrites with random bytes before unlinking (§10.4 retention intent).
 Swap to an S3-compatible managed tier later by adding a backend behind the same
 `StorageBackend` interface — no call-site changes.
+
+## Phase 0.2 — upload drop zone (architecture §6)
+Added in `veritas/app/uploads/`:
+- `POST /api/v1/uploads` — streaming multipart ingest with a hard 100 MB cap
+  enforced **on the stream** (a hand-rolled ASGI-body parser in `multipart.py`;
+  starlette's `request.form()` would spool the whole body before we could count
+  a byte). Single file part named `file` + `tenant_id` form field (uuid).
+- Three server-side validation gates (`validation.py`, `safe_parse.py`):
+  1. type allowlist (`.csv/.json/.xlsx/.parquet` + declared Content-Type must match),
+  2. magic-byte / content sniffing (CSV/JSON structural checks; PK/PAR1 for xlsx/parquet),
+  3. safe read-only parse (csv/json via stdlib, openpyxl `read_only+data_only`,
+     pyarrow `memory_map=False`) inside a **sandboxed subprocess** with hard
+     RLIMIT_AS (memory), RLIMIT_CPU, and a wall-clock timeout backstop.
+- `GET /api/v1/uploads/{id}` — upload/validation status (+ `reject_reason`,
+  migration `0002_uploads_reject_reason.sql`).
+- State machine: `uploaded → validating → storing → stored | rejected_upload`
+  (transport-level rejections — wrong type 415, oversized 413, malformed 400 —
+  return 4xx with no row; quarantined files create a `rejected_upload` row).
+- On success the file is encrypted at rest via the existing StorageBackend
+  (opaque UUID storage_key) and a full `uploads` metadata row is inserted.
+- New config: `VERITAS_RETENTION_DAYS`, `VERITAS_PARSE_MEMORY_LIMIT_MB`,
+  `VERITAS_PARSE_CPU_SECONDS`, `VERITAS_PARSE_ROW_CAP` (see `.env.example`).

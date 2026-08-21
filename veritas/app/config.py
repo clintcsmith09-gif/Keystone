@@ -28,6 +28,17 @@ class Settings(BaseSettings):
     master_key: str = ""  # validated by the storage backend; empty = storage refuses to start
     environment: str = "dev"
     upload_max_bytes: int = DEFAULT_UPLOAD_MAX_BYTES
+    # Retention default for uploads (§10.4: 30 days; the nightly purge job lands
+    # with Phase 0 operations — the timestamp is set at insert time regardless).
+    retention_days: int = 30
+    # Parse-safety gate (§6.2): the third gate parses the file in a sandboxed
+    # subprocess with hard memory/CPU limits. Limits are per-upload and generous
+    # enough for the 100 MB cap; a file that over-runs is quarantined.
+    parse_memory_limit_mb: int = 1536
+    parse_cpu_seconds: int = 60
+    # Safety-parse row/sheet caps: the gate proves the file parses cleanly with a
+    # bounded probe — the pipeline's normalize stage does the full deep parse.
+    parse_row_cap: int = 100_000
 
     @property
     def storage_root_resolved(self) -> Path:
