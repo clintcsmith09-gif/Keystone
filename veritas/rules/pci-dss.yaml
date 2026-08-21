@@ -1,0 +1,239 @@
+# PCI DSS scoped rule subset (architecture §7.3, §13 Q1).
+# Representative control checks evaluated against the normalized single-table
+# view produced by the normalize stage ("ledger"). Findings cite rule_id +
+# standard + version. Deterministic checks run without an LLM; only
+# judgment/llm_assist rules use the LLMClient seam. Columns referenced reflect
+# cardholder data (CHD) fields commonly found in a merchant ledger.
+standard: PCI-DSS
+version: 1
+rules:
+  # --- Build & maintain a secure network (Req 1) -------------------------------
+  - id: PCI-DSS.1.1.firewall-config
+    category: network
+    severity: medium
+    check_type: judgment
+    target: ledger
+    description: Assess whether network/firewall configuration evidence is represented (judgment-assisted).
+    params: {}
+    llm_assist: true
+    prompt_template: pci-dss-judgment-v1
+  - id: PCI-DSS.1.3.source-ip
+    category: network
+    severity: medium
+    check_type: format
+    target: ledger
+    description: Source IPs, where present, must be plausible addresses for traffic attribution.
+    params: { column: source_ip, pattern: "^\\d{1,3}(\\.\\d{1,3}){3}$", allow_missing: true }
+    llm_assist: false
+  # --- Protect cardholder data (Req 3) -----------------------------------------
+  - id: PCI-DSS.3.1.retention
+    category: cardholder-data
+    severity: high
+    check_type: judgment
+    target: ledger
+    description: Assess whether data retention/storage evidence is present and minimal (judgment-assisted).
+    params: {}
+    llm_assist: true
+    prompt_template: pci-dss-judgment-v1
+  - id: PCI-DSS.3.2.1.store-pan-minimal
+    category: cardholder-data
+    severity: high
+    check_type: presence
+    target: ledger
+    description: PAN must be present to audit; verify a PAN-bearing column exists.
+    params: { columns: [card_number], require: present }
+    llm_assist: false
+  - id: PCI-DSS.3.2.2.do-not-store-sens-auth
+    category: cardholder-data
+    severity: high
+    check_type: presence
+    target: ledger
+    description: Sensitive authentication data (CVV/PIN/full track) must NOT be stored. Fails if any such column is present.
+    params: { columns: [cvv, pin, ssn, track_data], require: absent }
+    llm_assist: false
+  - id: PCI-DSS.3.3.mask-pan
+    category: cardholder-data
+    severity: medium
+    check_type: presence
+    target: ledger
+    description: Only masked PAN may be displayed; a masked_pan/display column should exist.
+    params: { columns: [masked_pan], allow_missing: true }
+    llm_assist: false
+  - id: PCI-DSS.3.4.encrypt-pan
+    category: cardholder-data
+    severity: high
+    check_type: judgment
+    target: ledger
+    description: PAN must be rendered unreadable (encryption/tokenization); assess evidence (judgment-assisted).
+    params: {}
+    llm_assist: true
+    prompt_template: pci-dss-judgment-v1
+  - id: PCI-DSS.3.5.pan-format
+    category: cardholder-data
+    severity: high
+    check_type: format
+    target: ledger
+    description: PAN values must be 13-19 digits (Luhn-plausible), not free text.
+    params: { column: card_number, pattern: "^\\d{13,19}$" }
+    llm_assist: false
+  - id: PCI-DSS.3.5.2.pan-nonempty
+    category: cardholder-data
+    severity: high
+    check_type: threshold
+    target: ledger
+    description: No row may carry an empty PAN value.
+    params: { column: card_number, op: "ne", value: "", per_row: true }
+    llm_assist: false
+  - id: PCI-DSS.3.5.3.unique-pan
+    category: cardholder-data
+    severity: medium
+    check_type: reference
+    target: ledger
+    description: PAN values should be unique (no duplicate records implying duplication risk).
+    params: { column: card_number }
+    llm_assist: false
+  # --- Cardholder data capture (Req 2 / 3) -------------------------------------
+  - id: PCI-DSS.3.6.expiry-format
+    category: cardholder-data
+    severity: medium
+    check_type: format
+    target: ledger
+    description: Card expiry must be MM/YY or MM/YYYY.
+    params: { column: expiry, pattern: "^\\d{2}/\\d{2}(\\d{2})?$", allow_missing: true }
+    llm_assist: false
+  - id: PCI-DSS.3.7.holder-name
+    category: cardholder-data
+    severity: low
+    check_type: presence
+    target: ledger
+    description: Cardholder name field should be present for reconciliation.
+    params: { columns: [holder_name], allow_missing: true }
+    llm_assist: false
+  # --- Maintain a vulnerability management program (Req 6/11) ------------------
+  - id: PCI-DSS.6.1.patch-level
+    category: vulnerability-management
+    severity: medium
+    check_type: presence
+    target: ledger
+    description: Patch/version evidence should be represented.
+    params: { columns: [patch_level], allow_missing: true }
+    llm_assist: false
+  - id: PCI-DSS.11.2.scan-evidence
+    category: vulnerability-management
+    severity: low
+    check_type: judgment
+    target: ledger
+    description: Assess whether scan/assessment evidence is represented (judgment-assisted).
+    params: {}
+    llm_assist: true
+    prompt_template: pci-dss-judgment-v1
+  # --- Implement strong access control (Req 7/8) -------------------------------
+  - id: PCI-DSS.7.2.least-privilege
+    category: access-control
+    severity: high
+    check_type: format
+    target: ledger
+    description: Role values must come from an allowlist (least-privilege).
+    params: { column: role, allowed: [admin, analyst, auditor, compliance, viewer], allow_missing: true }
+    llm_assist: false
+  - id: PCI-DSS.8.1.unique-id
+    category: access-control
+    severity: high
+    check_type: reference
+    target: ledger
+    description: Every user must have a unique identity (user_id non-null + unique).
+    params: { column: user_id }
+    llm_assist: false
+  - id: PCI-DSS.8.2.1.authentication
+    category: access-control
+    severity: high
+    check_type: presence
+    target: ledger
+    description: Authentication-related fields (mfa_enabled / auth method) should be represented.
+    params: { columns: [mfa_enabled], allow_missing: true }
+    llm_assist: false
+  - id: PCI-DSS.8.2.3.mfa-remote
+    category: access-control
+    severity: medium
+    check_type: judgment
+    target: ledger
+    description: Assess MFA coverage for remote/privileged access (judgment-assisted).
+    params: {}
+    llm_assist: true
+    prompt_template: pci-dss-judgment-v1
+  # --- Regularly monitor and test networks (Req 10) ----------------------------
+  - id: PCI-DSS.10.2.audit-log
+    category: monitoring
+    severity: high
+    check_type: threshold
+    target: ledger
+    description: Audit log must have records; require at least one row.
+    params: { op: "ge", value: 1, per_row: false, aggregate: "row_count" }
+    llm_assist: false
+  - id: PCI-DSS.10.2.1.event-type
+    category: monitoring
+    severity: high
+    check_type: presence
+    target: ledger
+    description: Log entries must carry a timestamp and event type for monitoring.
+    params: { columns: [timestamp, event_type] }
+    llm_assist: false
+  - id: PCI-DSS.10.3.timestamp-format
+    category: monitoring
+    severity: medium
+    check_type: format
+    target: ledger
+    description: Timestamps must be ISO-8601 for reliable correlation.
+    params: { column: timestamp, pattern: "^\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}" }
+    llm_assist: false
+  # --- Maintain an information security policy (Req 12) ------------------------
+  - id: PCI-DSS.12.1.policy-evidence
+    category: security-policy
+    severity: info
+    check_type: judgment
+    target: ledger
+    description: Confirm policy documentation evidence is represented (judgment-assisted).
+    params: {}
+    llm_assist: true
+    prompt_template: pci-dss-judgment-v1
+  - id: PCI-DSS.12.3.1.role-assignment
+    category: security-policy
+    severity: medium
+    check_type: presence
+    target: ledger
+    description: Roles/access assignments should be present for policy enforcement review.
+    params: { columns: [role, access_level] }
+    llm_assist: false
+  # --- Data-quality cross-cutting checks ---------------------------------------
+  - id: PCI-DSS.dq.1.amount-nonnegative
+    category: data-quality
+    severity: high
+    check_type: threshold
+    target: ledger
+    description: Financial amounts must not be negative.
+    params: { column: amount, op: "ge", value: 0, per_row: true }
+    llm_assist: false
+  - id: PCI-DSS.dq.2.currency-allowed
+    category: data-quality
+    severity: low
+    check_type: format
+    target: ledger
+    description: Currency must be a 3-letter ISO code.
+    params: { column: currency, pattern: "^[A-Z]{3}$", allow_missing: true }
+    llm_assist: false
+  - id: PCI-DSS.dq.3.transaction-attribution
+    category: data-quality
+    severity: medium
+    check_type: reference
+    target: ledger
+    description: Transaction ids must be non-null and unique for accountability.
+    params: { column: transaction_id, nullable: true }
+    llm_assist: false
+  - id: PCI-DSS.dq.4.no-empty-key
+    category: data-quality
+    severity: medium
+    check_type: threshold
+    target: ledger
+    description: account_id must not be empty on any row.
+    params: { column: account_id, op: "ne", value: "", per_row: true }
+    llm_assist: false

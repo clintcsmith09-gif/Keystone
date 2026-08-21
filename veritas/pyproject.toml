@@ -17,6 +17,8 @@ dependencies = [
     # eval) for XLSX, pyarrow for Parquet. CSV/JSON use the standard library.
     "openpyxl>=3.1,<4",
     "pyarrow>=17,<21",
+    # Rule sets are versioned YAML config (§7.3) loaded at run start.
+    "PyYAML>=6,<7",
 ]
 
 [project.optional-dependencies]

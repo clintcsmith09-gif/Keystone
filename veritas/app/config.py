@@ -39,6 +39,22 @@ class Settings(BaseSettings):
     # Safety-parse row/sheet caps: the gate proves the file parses cleanly with a
     # bounded probe — the pipeline's normalize stage does the full deep parse.
     parse_row_cap: int = 100_000
+    # --- audit job queue (§7.2) -----------------------------------------------
+    # Crash-safe retry: a leased job is reclaimable after lease_timeout even if
+    # the worker died mid-stage; retries back off exponentially (2^n * base).
+    job_lease_timeout_seconds: int = 60
+    job_max_attempts: int = 3
+    job_retry_base_seconds: int = 1
+    # --- LLM provider seam (§7.3): thin interface, NOT wired to a provider. ----
+    # MVP is fully offline: provider 'noop' returns config-driven scripted
+    # responses so every stage is deterministically testable. Real provider
+    # hookup is Phase 1 and stays behind this seam. No third-party spend now.
+    llm_provider: str = "noop"
+    llm_model_id: str = "noop-llm"
+    llm_model_version: str = "0.1.0"
+    # §11.3 pre-run cost gate: halt the run when the upfront LLM cost estimate
+    # would exceed this threshold (USD). 0 = gate disabled at MVP.
+    cost_gate_max_usd: float = 0.0
 
     @property
     def storage_root_resolved(self) -> Path:
