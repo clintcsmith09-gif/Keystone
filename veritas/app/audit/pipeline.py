@@ -74,12 +74,27 @@ async def _run_match(settings: Settings, storage, run: dict, llm, rule_set) -> t
 
 
 async def _run_report(settings: Settings, storage, run: dict, llm, rule_set) -> tuple:
+    # §8 standardized report, derived deterministically from the stored findings
+    # + audit trail (idempotent; the LLM seam is used only to pin model versions
+    # — no call is made). Stored encrypted via the StorageBackend for free
+    # re-download, and referenced by the audit_steps output_artifact_ref.
     findings = await repo.get_findings(settings, run["run_id"])
-    report = await report_mod.synthesize(rule_set, findings, llm)
-    out_ref = artifact_key(run["run_id"], "report")
+    report = await report_mod.synthesize(
+        rule_set, findings, llm, run_id=run["run_id"],
+        artifacts=[{
+            "name": "report",
+            "ref": report_mod.report_artifact_key(run["run_id"]),
+            "content_type": "application/json",
+            "format": f"veritas-report-{report_mod.REPORT_VERSION}",
+        }],
+    )
+    out_ref = report_mod.report_artifact_key(run["run_id"])
     storage.put(out_ref, json.dumps(report).encode("utf-8"), content_type="application/json")
-    es = report.get("executive_summary", {})
-    return out_ref, es.get("tokens_in", 0), es.get("tokens_out", 0)
+    # Report assembly is deterministic (no LLM); surface token telemetry already
+    # recorded against the judgment findings that fed this report.
+    tin = sum((f.get("llm_judgment") or {}).get("tokens_in", 0) for f in findings)
+    tout = sum((f.get("llm_judgment") or {}).get("tokens_out", 0) for f in findings)
+    return out_ref, tin, tout
 
 
 async def _run_quote(settings: Settings, storage, run: dict, llm) -> tuple:

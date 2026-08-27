@@ -125,3 +125,26 @@ Added in `veritas/app/uploads/`:
   (opaque UUID storage_key) and a full `uploads` metadata row is inserted.
 - New config: `VERITAS_RETENTION_DAYS`, `VERITAS_PARSE_MEMORY_LIMIT_MB`,
   `VERITAS_PARSE_CPU_SECONDS`, `VERITAS_PARSE_ROW_CAP` (see `.env.example`).
+
+## Phase 0.4 — Veritas Compliance Report artifact (architecture §8)
+- The pipeline's **Report stage** now emits the standardized **Veritas
+  Compliance Report v0.1** JSON (§8 fixed schema): `run_id, standard,
+  rule_set_version, generated_at, model_versions, summary {passed, failed,
+  needs_review, info}, findings[], data_quality_notes[], artifacts[]`. Each
+  finding carries `rule_id, severity, status, evidence, llm_judgment?,
+  recommendation`. Assembly is deterministic and offline (the LLM seam is only
+  used to pin `model_versions`) and reads from the stored findings + audit
+  trail, so regeneration is idempotent.
+- One source of truth, two renderings — no drift: the JSON artifact, plus a
+  faithful human **Markdown** view via `report.to_markdown()`.
+- On completion the artifact is stored **encrypted via the existing
+  StorageBackend** and referenced by `audit_steps.output_artifact_ref`, so
+  re-download is free (no re-run).
+- Authenticated download endpoints (`app/audit/report_api.py`):
+  - `GET /api/v1/audits/{id}/report` — JSON, or `?format=md` (text/markdown).
+  - `GET /api/v1/audits/{id}/trail` — run + steps + findings (consistent with
+    the existing audit-run surface, §7.4).
+  - **Tenant isolation (§10.3):** a client sending `X-Tenant-Id` sees only its
+    own tenant's audits (anything else → 404, no existence leak); an owner /
+    auditor request without the header sees all. A real token/JWT replaces the
+    header as the tenant-scoping seam in Phase 1.
