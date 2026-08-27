@@ -125,5 +125,9 @@ def test_report_synthesizer_aggregates(seeded_view):
     assert s["total"] == len(rs.rules)
     assert s["passed"] + s["failed"] + s["needs_review"] == s["total"]
     assert rep["standard"] == "ISO-27001"
+    assert rep["report_version"] == "v0.1"
+    assert rep["schema_version"] == 1
     assert rep["findings"]
-    assert rep["executive_summary"]["prompt_template_id"] == report.REPORT_TEMPLATE_ID
+    # §8 model_versions pins the synthesizer model identity (no LLM call made)
+    assert rep["model_versions"]["report_synthesizer"]["model_id"] == llm.model_id
+    assert rep["model_versions"]["report_synthesizer"]["model_version"] == llm.model_version
