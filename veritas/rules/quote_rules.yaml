@@ -1,0 +1,35 @@
+# Veritas quote pricing rules — architecture §9.1.
+# Deterministic, template-based pricing at MVP (no LLM for money decisions,
+# §9.1: template is cheaper and fully reproducible). Owned by the owner; edited
+# in this file. Versioned config in the repo (same model as the rule sets, §7.3).
+#
+# Price = base
+#       + sum(per_standard_adder[standard])
+#       + first volume-band adder containing data_rows
+#       + high-severity-exposure adder (per HIGH-severity finding)
+#       + failed-findings adder (per FAILED finding — remediation scope)
+#       - re-audit discount (pct of the running total, when eligible)
+#
+# All amounts are integers/multiples of 0.01 USD, deterministic given the same
+# audit inputs. No rounding drift: money math uses exact decimal steps.
+currency: USD
+valid_from: "2026-08-17"          # informational; pricing rev marker
+
+base_price_usd: 1200.00           # starting audit price
+
+per_standard_adder_usd:
+  ISO-27001: 800.00
+  PCI-DSS: 900.00
+
+# Data-volume band adder (rows in the normalized view, §6.2 50–100 MB audits).
+per_volume_band_usd:
+  - { min_rows: 0,       max_rows: 50000,   adder_usd: 0.00 }
+  - { min_rows: 50001,   max_rows: 500000,  adder_usd: 400.00 }
+  - { min_rows: 500001,  max_rows: null,    adder_usd: 900.00 }
+
+high_severity_adder_usd: 50.00    # per HIGH-severity finding (exposure review)
+failed_finding_adder_usd: 40.00   # per FAILED finding (remediation scope)
+
+re_audit_discount_pct: 25         # percent discount off the running total
+re_audit_eligible_days: 180       # eligible when the tenant has a prior completed
+                                  # audit within this many days (see §9.1 discount)

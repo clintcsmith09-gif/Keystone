@@ -98,9 +98,21 @@ async def _run_report(settings: Settings, storage, run: dict, llm, rule_set) -> 
 
 
 async def _run_quote(settings: Settings, storage, run: dict, llm) -> tuple:
-    agent = quote_mod.QuoteStub(llm.model_id, llm.model_version)
+    # Phase 0.5: Quote Agent drafts a priced quote deterministically (§9.1, no
+    # LLM). Status stays 'draft' — it becomes client-visible only after the
+    # owner explicitly approves it in the review queue (§9.1 hard gate). The
+    # pipeline merely records the draft; the client quote-request endpoint
+    # routes it to pending_owner.
+    agent = quote_mod.DeterministicQuoteAgent(
+        model_id=llm.model_id, model_version=llm.model_version
+    )
     report = json.loads(storage.get(artifact_key(run["run_id"], "report")) or b"{}")
-    payload = await agent.quote(run=run, report=report)
+    findings = await repo.get_findings(settings, run["run_id"])
+    view = json.loads(storage.get(artifact_key(run["run_id"], "normalize")) or b"{}")
+    volume = {"rows": view.get("row_count", 0), "files": 1}
+    payload = await agent.quote(
+        run=run, report=report, findings=findings, volume=volume
+    )
     await repo.insert_quote_stub(
         settings, run_id=run["run_id"], tenant_id=run["tenant_id"], payload=payload
     )

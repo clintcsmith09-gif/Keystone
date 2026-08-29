@@ -26,6 +26,10 @@ RULES_DIR = Path(__file__).resolve().parents[2] / "rules"
 CHECK_TYPES = ("presence", "threshold", "format", "reference", "judgment")
 SEVERITIES = ("high", "medium", "low", "info")
 
+# quote_rules.yaml lives beside the rule sets (same repo config dir) but is NOT a
+# rule set — it's the §9.1 pricing config. Rule-set discovery must skip it.
+QUOTE_RULES_FILENAME = "quote_rules.yaml"
+
 
 @dataclass(frozen=True)
 class Rule:
@@ -102,6 +106,8 @@ def load_all(rules_dir: Path | None = None) -> dict[str, RuleSet]:
     rules_dir = rules_dir or RULES_DIR
     by_standard: dict[str, RuleSet] = {}
     for path in sorted(rules_dir.glob("*.yaml")):
+        if path.name == QUOTE_RULES_FILENAME:
+            continue  # pricing config, not a rule set (§9.1)
         rs = load_ruleset(path)
         cur = by_standard.get(rs.standard)
         if cur is None or rs.version > cur.version:
