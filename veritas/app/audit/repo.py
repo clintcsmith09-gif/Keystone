@@ -38,10 +38,13 @@ def _as_json(value):
 
 # --- audit_runs ---------------------------------------------------------------
 async def get_upload(settings: Settings, upload_id: str) -> dict | None:
-    """Fetch upload metadata needed to normalize (storage_key, filename, type)."""
+    """Fetch upload metadata needed to normalize (storage_key, filename, type)
+    plus size_bytes, which the pre-run cost gate uses for its file-size-based
+    token estimate (architecture §11.3a)."""
     async with await _connect(settings) as conn:
         row = await conn.execute(
-            "SELECT storage_key, filename, content_type, status FROM uploads WHERE id = %s",
+            "SELECT storage_key, filename, content_type, status, size_bytes "
+            "FROM uploads WHERE id = %s",
             (upload_id,),
         )
         rec = await row.fetchone()
@@ -52,6 +55,7 @@ async def get_upload(settings: Settings, upload_id: str) -> dict | None:
         "filename": rec[1],
         "content_type": rec[2],
         "status": rec[3],
+        "size_bytes": int(rec[4]) if rec[4] is not None else 0,
     }
 
 
@@ -112,6 +116,7 @@ async def get_run(settings: Settings, run_id: str) -> dict | None:
             """
             SELECT id, tenant_id, upload_id, standard, rule_set_version, status,
                    cost_estimate_usd, actual_tokens_in, actual_tokens_out,
+                   approved_via_gate, gate_halt_reason,
                    started_at, completed_at, created_at
             FROM audit_runs WHERE id = %s
             """,
@@ -130,9 +135,11 @@ async def get_run(settings: Settings, run_id: str) -> dict | None:
         "cost_estimate_usd": float(rec[6]) if rec[6] is not None else None,
         "actual_tokens_in": rec[7],
         "actual_tokens_out": rec[8],
-        "started_at": rec[9].isoformat() if rec[9] else None,
-        "completed_at": rec[10].isoformat() if rec[10] else None,
-        "created_at": rec[11].isoformat() if rec[11] else None,
+        "approved_via_gate": bool(rec[9]),
+        "gate_halt_reason": rec[10],
+        "started_at": rec[11].isoformat() if rec[11] else None,
+        "completed_at": rec[12].isoformat() if rec[12] else None,
+        "created_at": rec[13].isoformat() if rec[13] else None,
     }
 
 
@@ -160,6 +167,41 @@ async def mark_run_completed(settings: Settings, run_id: str, *, status: str = "
         await conn.execute(
             "UPDATE audit_runs SET status = %s, completed_at = now() WHERE id = %s",
             (status, run_id),
+        )
+
+
+async def halt_for_cost_gate(
+    settings: Settings, run_id: str, *, reason: str,
+    tokens_in: int = 0, tokens_out: int = 0,
+) -> None:
+    """Cost-gate halt (pre-run or mid-flight): run does not proceed (or stops at
+    the next stage boundary); partial artifacts are preserved; reason recorded."""
+    async with await _connect(settings) as conn:
+        await conn.execute(
+            "UPDATE audit_runs SET status = 'cost_gate_halted', "
+            "gate_halt_reason = %s, completed_at = now(), "
+            "actual_tokens_in = %s, actual_tokens_out = %s WHERE id = %s",
+            (reason[:2000], tokens_in, tokens_out, run_id),
+        )
+
+
+async def queue_for_owner_approval(settings: Settings, run_id: str, *, reason: str) -> None:
+    """Monthly cap reached: the audit is queued for the owner review queue rather
+    than started (status awaiting_owner_approval)."""
+    async with await _connect(settings) as conn:
+        await conn.execute(
+            "UPDATE audit_runs SET status = 'awaiting_owner_approval', "
+            "gate_halt_reason = %s WHERE id = %s",
+            (reason[:2000], run_id),
+        )
+
+
+async def consume_gate_approval(settings: Settings, run_id: str) -> None:
+    """Clear the one-time owner approval so a future re-run of the same audit is
+    gated by the monthly cap again (the grant applies to a single run)."""
+    async with await _connect(settings) as conn:
+        await conn.execute(
+            "UPDATE audit_runs SET approved_via_gate = false WHERE id = %s", (run_id,)
         )
 
 

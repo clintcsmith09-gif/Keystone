@@ -1,0 +1,10 @@
+[Unit]
+Description=Veritas nightly automated full backup
+After=postgresql.service
+
+[Service]
+Type=oneshot
+User=engine
+WorkingDirectory=/home/agent-lead/Keystone/veritas
+EnvironmentFile=/home/agent-lead/Keystone/veritas/.env
+ExecStart=/bin/bash /home/agent-lead/Keystone/veritas/scripts/backup.sh

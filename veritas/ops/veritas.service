@@ -1,0 +1,27 @@
+# Veritas service unit for hosts with systemd (24/7 uptime, §13 Q2).
+# Install:
+#   sudo cp ops/veritas.service /etc/systemd/system/veritas.service
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now veritas
+#
+# Restart-on-failure is built in (Restart=always). The backup timer:
+#   sudo cp ops/veritas-backup.service ops/veritas-backup.timer /etc/systemd/system/
+#   sudo systemctl daemon-reload && sudo systemctl enable --now veritas-backup.timer
+[Unit]
+Description=Veritas AI Audit Engine (FastAPI)
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=engine
+WorkingDirectory=/home/agent-lead/Keystone/veritas
+EnvironmentFile=/home/agent-lead/Keystone/veritas/.env
+ExecStart=/opt/veritas-venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 3000
+Restart=always
+RestartSec=5
+# Lean MVP footprint: single worker.
+TimeoutStopSec=20
+
+[Install]
+WantedBy=multi-user.target
