@@ -56,6 +56,43 @@ class Settings(BaseSettings):
     # would exceed this threshold (USD). 0 = gate disabled at MVP.
     cost_gate_max_usd: float = 0.0
 
+    # --- Phase 0.6 cost gate (§11.3) — token-budget by default ----------------
+    # The gate computes deterministically on token budgets. There is no real
+    # provider wired at MVP, so it never spends money and never calls an LLM to
+    # decide. When a provider + its price are configured (Phase 1), the same
+    # machinery extends to dollars (see cost_gate_price_per_million_*).
+    cost_gate_enabled: bool = True
+    # Per-audit hard token budgets (§11.3 defaults: 250k in / 75k out).
+    cost_gate_max_tokens_in: int = 250_000
+    cost_gate_max_tokens_out: int = 75_000
+    # --- deterministic pre-run upper-bound estimate knobs (§11.3) -------------
+    # est_in  = max(1,row_est)*tokens_per_row
+    #         + file_size_bytes*tokens_per_byte
+    #         + judgment_rule_count*tokens_per_judgment_rule
+    # est_out = judgment_rule_count*tokens_out_per_judgment_rule
+    # both scaled by cost_gate_estimate_safety_factor. row_est is a deterministic
+    # upper bound on rows derived from file size and bytes_per_row (capped).
+    cost_gate_estimate_tokens_per_byte: float = 0.5
+    cost_gate_estimate_tokens_per_row: int = 40
+    cost_gate_estimate_tokens_per_judgment_rule: int = 300
+    cost_gate_estimate_tokens_out_per_judgment_rule: int = 100
+    cost_gate_estimate_bytes_per_row: int = 200
+    cost_gate_estimate_row_cap: int = 1_000_000
+    cost_gate_estimate_safety_factor: float = 1.25
+    # --- monthly aggregate cap (§11.3): default 20% of monthly revenue ---------
+    # Monthly revenue is not a live number at MVP (default 0 = no revenue model),
+    # so the operational default is a monthly token budget. When BOTH
+    # monthly_revenue_usd > 0 AND a provider price is configured, the token caps
+    # are derived from ratio of monthly revenue instead (the dollar extension).
+    monthly_revenue_usd: float = 0.0
+    cost_gate_monthly_cap_ratio: float = 0.20
+    cost_gate_monthly_warn_ratio: float = 0.80
+    cost_gate_monthly_tokens_in: int = 2_000_000
+    cost_gate_monthly_tokens_out: int = 600_000
+    # Provider price per 1M tokens (0 = not configured; gate stays token-budget).
+    cost_gate_price_per_million_in: float = 0.0
+    cost_gate_price_per_million_out: float = 0.0
+
     @property
     def storage_root_resolved(self) -> Path:
         return self.storage_root.resolve()

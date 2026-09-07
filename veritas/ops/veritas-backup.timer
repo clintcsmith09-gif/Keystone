@@ -1,0 +1,10 @@
+[Unit]
+Description=Run the Veritas nightly automated full backup
+
+[Timer]
+# Daily full backup at 02:17 local, with OnBootSec so a reboot still backs up.
+OnCalendar=*-*-* 02:17:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
