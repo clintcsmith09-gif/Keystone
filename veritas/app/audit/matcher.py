@@ -241,6 +241,7 @@ async def _check_judgment(rule: Rule, llm: LLMClient, view: dict) -> dict:
         "prompt_template_id": template_id,
         "tokens_in": result.tokens_in,
         "tokens_out": result.tokens_out,
+        "latency_ms": result.latency_ms,
         "verdict": result.text,
     })
 
