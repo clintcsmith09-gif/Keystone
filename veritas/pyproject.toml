@@ -19,6 +19,9 @@ dependencies = [
     "pyarrow>=17,<21",
     # Rule sets are versioned YAML config (§7.3) loaded at run start.
     "PyYAML>=6,<7",
+    # Real LLM provider behind the §7.3 seam (Phase 1): Anthropic Claude API.
+    # Imported lazily by AnthropicLLMClient so the noop path never needs it.
+    "anthropic>=0.40,<1",
 ]
 
 [project.optional-dependencies]

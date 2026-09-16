@@ -9,6 +9,7 @@ from __future__ import annotations
 from functools import lru_cache
 from pathlib import Path
 
+from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # Hard cap from architecture §6.2 / §13 Q4: 100 MB per upload at MVP.
@@ -45,13 +46,36 @@ class Settings(BaseSettings):
     job_lease_timeout_seconds: int = 60
     job_max_attempts: int = 3
     job_retry_base_seconds: int = 1
-    # --- LLM provider seam (§7.3): thin interface, NOT wired to a provider. ----
-    # MVP is fully offline: provider 'noop' returns config-driven scripted
-    # responses so every stage is deterministically testable. Real provider
-    # hookup is Phase 1 and stays behind this seam. No third-party spend now.
+    # --- LLM provider seam (§7.3): thin interface, wired to a real provider. ---
+    # Default stays 'noop' (offline, deterministic) so nothing breaks before an
+    # API key exists. 'anthropic' wires the real Claude API — see app/audit/llm.py
+    # for the zero-retention / no-training position and the ops checklist.
     llm_provider: str = "noop"
     llm_model_id: str = "noop-llm"
     llm_model_version: str = "0.1.0"
+    # --- Anthropic provider (Phase 1). ----------------------------------------
+    # ANTHROPIC_API_KEY / ANTHROPIC_MODEL / ANTHROPIC_API_VERSION are read with
+    # their unprefixed (industry-standard) env names FIRST, then the VERITAS_
+    # prefixed equivalents. The key is never logged and never committed; an
+    # empty key makes provider='anthropic' fail loudly at construction (see
+    # AnthropicLLMClient). Default model: claude-sonnet-4-5 — current mid-tier
+    # lineup model ($3/$15 per MTok in/out) at ~$0.01–0.04 per audit for the
+    # 2–6 judgment rules in the MVP rule sets, inside the §11.3 cost target.
+    anthropic_api_key: str = Field(
+        default="",
+        validation_alias=AliasChoices("ANTHROPIC_API_KEY", "VERITAS_ANTHROPIC_API_KEY"),
+    )
+    anthropic_model: str = Field(
+        default="claude-sonnet-4-5",
+        validation_alias=AliasChoices("ANTHROPIC_MODEL", "VERITAS_ANTHROPIC_MODEL"),
+    )
+    anthropic_api_version: str = Field(
+        default="2023-06-01",
+        validation_alias=AliasChoices("ANTHROPIC_API_VERSION", "VERITAS_ANTHROPIC_API_VERSION"),
+    )
+    anthropic_max_tokens: int = 1024
+    anthropic_timeout_seconds: float = 60.0
+    anthropic_max_retries: int = 2
     # §11.3 pre-run cost gate: halt the run when the upfront LLM cost estimate
     # would exceed this threshold (USD). 0 = gate disabled at MVP.
     cost_gate_max_usd: float = 0.0
