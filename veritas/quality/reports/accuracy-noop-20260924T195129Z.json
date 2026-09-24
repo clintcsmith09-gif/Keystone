@@ -1,0 +1,1588 @@
+{
+  "report": "audit-accuracy",
+  "block": "A",
+  "generated_at": "2026-09-24T19:51:29.358871+00:00",
+  "provider": "noop",
+  "model_id": "noop-llm",
+  "model_version": "0.1.0",
+  "comparison_key": "dataset artifact + rule_id (rule fires when status='failed'); row-level secondary key adds the 0-based data row index for format/per-row-threshold rules",
+  "scoring_scope": "deterministic rules only (presence/threshold/format/reference, llm_assist=false); judgment/llm_assist rules emit needs_review and are reported separately",
+  "floors": {
+    "precision": 0.95,
+    "recall": 0.95
+  },
+  "corpus": {
+    "version": 1,
+    "seed": 20260924,
+    "files": 7,
+    "rows": 55,
+    "expected_rule_fires": 31,
+    "expected_row_level_fires": 17,
+    "uncovered_anomaly_rows": 8,
+    "integrity_problems": [],
+    "dir": "/home/agent-lead/Keystone/veritas/quality/corpus"
+  },
+  "rules_dir": "/home/agent-lead/Keystone/veritas/rules",
+  "overall": {
+    "tp": 31,
+    "fp": 0,
+    "fn": 0,
+    "tn": 270,
+    "cells_scored": 301,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "rules_scored": 43,
+    "rules_never_exercised": [
+      "ISO-27001.A.12.3.1-backup",
+      "ISO-27001.A.12.6.1-vulnerability-management",
+      "ISO-27001.A.13.2.1-transfer-policy",
+      "ISO-27001.A.16.1.5-response",
+      "ISO-27001.A.8.1.1-inventory",
+      "ISO-27001.A.8.2.1-classification",
+      "ISO-27001.A.9.1.2-accessible-information",
+      "ISO-27001.A.9.4.2-secure-log-on",
+      "PCI-DSS.3.2.1.store-pan-minimal",
+      "PCI-DSS.3.3.mask-pan",
+      "PCI-DSS.3.7.holder-name",
+      "PCI-DSS.6.1.patch-level",
+      "PCI-DSS.8.2.1.authentication"
+    ],
+    "judgment_rules_unscored": 8
+  },
+  "per_rule": [
+    {
+      "rule_id": "ISO-27001.A.12.1.1-operating-procedures",
+      "standard": "ISO-27001",
+      "category": "operations",
+      "severity": "medium",
+      "check_type": "format",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "ISO-27001.A.12.3.1-backup",
+      "standard": "ISO-27001",
+      "category": "operations",
+      "severity": "high",
+      "check_type": "presence",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 7,
+      "support": 0,
+      "predicted": 0,
+      "precision": null,
+      "recall": null,
+      "f1": null
+    },
+    {
+      "rule_id": "ISO-27001.A.12.4.1-event-logging",
+      "standard": "ISO-27001",
+      "category": "operations",
+      "severity": "high",
+      "check_type": "threshold",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "ISO-27001.A.12.4.3-clock-sync",
+      "standard": "ISO-27001",
+      "category": "operations",
+      "severity": "medium",
+      "check_type": "format",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "ISO-27001.A.12.6.1-vulnerability-management",
+      "standard": "ISO-27001",
+      "category": "operations",
+      "severity": "medium",
+      "check_type": "presence",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 7,
+      "support": 0,
+      "predicted": 0,
+      "precision": null,
+      "recall": null,
+      "f1": null
+    },
+    {
+      "rule_id": "ISO-27001.A.13.1.1-network-controls",
+      "standard": "ISO-27001",
+      "category": "communications",
+      "severity": "medium",
+      "check_type": "format",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "ISO-27001.A.13.2.1-transfer-policy",
+      "standard": "ISO-27001",
+      "category": "communications",
+      "severity": "medium",
+      "check_type": "presence",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 7,
+      "support": 0,
+      "predicted": 0,
+      "precision": null,
+      "recall": null,
+      "f1": null
+    },
+    {
+      "rule_id": "ISO-27001.A.16.1.4-detect-incidents",
+      "standard": "ISO-27001",
+      "category": "incident-management",
+      "severity": "high",
+      "check_type": "presence",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "ISO-27001.A.16.1.5-response",
+      "standard": "ISO-27001",
+      "category": "incident-management",
+      "severity": "medium",
+      "check_type": "presence",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 7,
+      "support": 0,
+      "predicted": 0,
+      "precision": null,
+      "recall": null,
+      "f1": null
+    },
+    {
+      "rule_id": "ISO-27001.A.8.1.1-inventory",
+      "standard": "ISO-27001",
+      "category": "asset-management",
+      "severity": "medium",
+      "check_type": "presence",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 7,
+      "support": 0,
+      "predicted": 0,
+      "precision": null,
+      "recall": null,
+      "f1": null
+    },
+    {
+      "rule_id": "ISO-27001.A.8.2.1-classification",
+      "standard": "ISO-27001",
+      "category": "asset-management",
+      "severity": "low",
+      "check_type": "presence",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 7,
+      "support": 0,
+      "predicted": 0,
+      "precision": null,
+      "recall": null,
+      "f1": null
+    },
+    {
+      "rule_id": "ISO-27001.A.9.1.2-accessible-information",
+      "standard": "ISO-27001",
+      "category": "access-control",
+      "severity": "high",
+      "check_type": "presence",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 7,
+      "support": 0,
+      "predicted": 0,
+      "precision": null,
+      "recall": null,
+      "f1": null
+    },
+    {
+      "rule_id": "ISO-27001.A.9.2.1-user-registration",
+      "standard": "ISO-27001",
+      "category": "access-control",
+      "severity": "high",
+      "check_type": "reference",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "ISO-27001.A.9.2.2-user-access-provisioning",
+      "standard": "ISO-27001",
+      "category": "access-control",
+      "severity": "medium",
+      "check_type": "reference",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "ISO-27001.A.9.2.5-review-user-access",
+      "standard": "ISO-27001",
+      "category": "access-control",
+      "severity": "low",
+      "check_type": "presence",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "ISO-27001.A.9.2.6-removal-access",
+      "standard": "ISO-27001",
+      "category": "access-control",
+      "severity": "medium",
+      "check_type": "presence",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "ISO-27001.A.9.3.1-sole-use",
+      "standard": "ISO-27001",
+      "category": "access-control",
+      "severity": "medium",
+      "check_type": "threshold",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "ISO-27001.A.9.4.2-secure-log-on",
+      "standard": "ISO-27001",
+      "category": "access-control",
+      "severity": "high",
+      "check_type": "presence",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 7,
+      "support": 0,
+      "predicted": 0,
+      "precision": null,
+      "recall": null,
+      "f1": null
+    },
+    {
+      "rule_id": "ISO-27001.integrity.1-non-repudiation",
+      "standard": "ISO-27001",
+      "category": "integrity",
+      "severity": "high",
+      "check_type": "reference",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "ISO-27001.scope.1-required-field-empty",
+      "standard": "ISO-27001",
+      "category": "data-quality",
+      "severity": "medium",
+      "check_type": "threshold",
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "tn": 5,
+      "support": 2,
+      "predicted": 2,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "ISO-27001.scope.2-email-format",
+      "standard": "ISO-27001",
+      "category": "data-quality",
+      "severity": "low",
+      "check_type": "format",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "ISO-27001.scope.3-role-allowed",
+      "standard": "ISO-27001",
+      "category": "access-control",
+      "severity": "high",
+      "check_type": "format",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "PCI-DSS.1.3.source-ip",
+      "standard": "PCI-DSS",
+      "category": "network",
+      "severity": "medium",
+      "check_type": "format",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "PCI-DSS.10.2.1.event-type",
+      "standard": "PCI-DSS",
+      "category": "monitoring",
+      "severity": "high",
+      "check_type": "presence",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "PCI-DSS.10.2.audit-log",
+      "standard": "PCI-DSS",
+      "category": "monitoring",
+      "severity": "high",
+      "check_type": "threshold",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "PCI-DSS.10.3.timestamp-format",
+      "standard": "PCI-DSS",
+      "category": "monitoring",
+      "severity": "medium",
+      "check_type": "format",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "PCI-DSS.12.3.1.role-assignment",
+      "standard": "PCI-DSS",
+      "category": "security-policy",
+      "severity": "medium",
+      "check_type": "presence",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "PCI-DSS.3.2.1.store-pan-minimal",
+      "standard": "PCI-DSS",
+      "category": "cardholder-data",
+      "severity": "high",
+      "check_type": "presence",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 7,
+      "support": 0,
+      "predicted": 0,
+      "precision": null,
+      "recall": null,
+      "f1": null
+    },
+    {
+      "rule_id": "PCI-DSS.3.2.2.do-not-store-sens-auth",
+      "standard": "PCI-DSS",
+      "category": "cardholder-data",
+      "severity": "high",
+      "check_type": "presence",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "PCI-DSS.3.3.mask-pan",
+      "standard": "PCI-DSS",
+      "category": "cardholder-data",
+      "severity": "medium",
+      "check_type": "presence",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 7,
+      "support": 0,
+      "predicted": 0,
+      "precision": null,
+      "recall": null,
+      "f1": null
+    },
+    {
+      "rule_id": "PCI-DSS.3.5.2.pan-nonempty",
+      "standard": "PCI-DSS",
+      "category": "cardholder-data",
+      "severity": "high",
+      "check_type": "threshold",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "PCI-DSS.3.5.3.unique-pan",
+      "standard": "PCI-DSS",
+      "category": "cardholder-data",
+      "severity": "medium",
+      "check_type": "reference",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "PCI-DSS.3.5.pan-format",
+      "standard": "PCI-DSS",
+      "category": "cardholder-data",
+      "severity": "high",
+      "check_type": "format",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "PCI-DSS.3.6.expiry-format",
+      "standard": "PCI-DSS",
+      "category": "cardholder-data",
+      "severity": "medium",
+      "check_type": "format",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "PCI-DSS.3.7.holder-name",
+      "standard": "PCI-DSS",
+      "category": "cardholder-data",
+      "severity": "low",
+      "check_type": "presence",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 7,
+      "support": 0,
+      "predicted": 0,
+      "precision": null,
+      "recall": null,
+      "f1": null
+    },
+    {
+      "rule_id": "PCI-DSS.6.1.patch-level",
+      "standard": "PCI-DSS",
+      "category": "vulnerability-management",
+      "severity": "medium",
+      "check_type": "presence",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 7,
+      "support": 0,
+      "predicted": 0,
+      "precision": null,
+      "recall": null,
+      "f1": null
+    },
+    {
+      "rule_id": "PCI-DSS.7.2.least-privilege",
+      "standard": "PCI-DSS",
+      "category": "access-control",
+      "severity": "high",
+      "check_type": "format",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "PCI-DSS.8.1.unique-id",
+      "standard": "PCI-DSS",
+      "category": "access-control",
+      "severity": "high",
+      "check_type": "reference",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "PCI-DSS.8.2.1.authentication",
+      "standard": "PCI-DSS",
+      "category": "access-control",
+      "severity": "high",
+      "check_type": "presence",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 7,
+      "support": 0,
+      "predicted": 0,
+      "precision": null,
+      "recall": null,
+      "f1": null
+    },
+    {
+      "rule_id": "PCI-DSS.dq.1.amount-nonnegative",
+      "standard": "PCI-DSS",
+      "category": "data-quality",
+      "severity": "high",
+      "check_type": "threshold",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "PCI-DSS.dq.2.currency-allowed",
+      "standard": "PCI-DSS",
+      "category": "data-quality",
+      "severity": "low",
+      "check_type": "format",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "PCI-DSS.dq.3.transaction-attribution",
+      "standard": "PCI-DSS",
+      "category": "data-quality",
+      "severity": "medium",
+      "check_type": "reference",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "rule_id": "PCI-DSS.dq.4.no-empty-key",
+      "standard": "PCI-DSS",
+      "category": "data-quality",
+      "severity": "medium",
+      "check_type": "threshold",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "support": 1,
+      "predicted": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    }
+  ],
+  "per_file": [
+    {
+      "file": "card_anomalies.csv",
+      "rows": 10,
+      "expected_failures": [
+        "PCI-DSS.3.5.2.pan-nonempty",
+        "PCI-DSS.3.5.3.unique-pan",
+        "PCI-DSS.3.5.pan-format",
+        "PCI-DSS.3.6.expiry-format",
+        "PCI-DSS.dq.1.amount-nonnegative",
+        "PCI-DSS.dq.2.currency-allowed",
+        "PCI-DSS.dq.4.no-empty-key"
+      ],
+      "tp": 7,
+      "fp": 0,
+      "fn": 0,
+      "tn": 36,
+      "fired": [
+        "PCI-DSS.3.5.pan-format",
+        "PCI-DSS.3.5.2.pan-nonempty",
+        "PCI-DSS.3.5.3.unique-pan",
+        "PCI-DSS.3.6.expiry-format",
+        "PCI-DSS.dq.1.amount-nonnegative",
+        "PCI-DSS.dq.2.currency-allowed",
+        "PCI-DSS.dq.4.no-empty-key"
+      ],
+      "missed": [],
+      "unexpected": []
+    },
+    {
+      "file": "clean_ledger.csv",
+      "rows": 12,
+      "expected_failures": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 43,
+      "fired": [],
+      "missed": [],
+      "unexpected": []
+    },
+    {
+      "file": "empty_ledger.csv",
+      "rows": 0,
+      "expected_failures": [
+        "ISO-27001.A.12.4.1-event-logging",
+        "PCI-DSS.10.2.audit-log"
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "tn": 41,
+      "fired": [
+        "ISO-27001.A.12.4.1-event-logging",
+        "PCI-DSS.10.2.audit-log"
+      ],
+      "missed": [],
+      "unexpected": []
+    },
+    {
+      "file": "identity_anomalies.csv",
+      "rows": 14,
+      "expected_failures": [
+        "ISO-27001.A.12.1.1-operating-procedures",
+        "ISO-27001.A.12.4.3-clock-sync",
+        "ISO-27001.A.13.1.1-network-controls",
+        "ISO-27001.A.9.2.1-user-registration",
+        "ISO-27001.A.9.2.2-user-access-provisioning",
+        "ISO-27001.A.9.3.1-sole-use",
+        "ISO-27001.integrity.1-non-repudiation",
+        "ISO-27001.scope.1-required-field-empty",
+        "ISO-27001.scope.2-email-format",
+        "ISO-27001.scope.3-role-allowed",
+        "PCI-DSS.1.3.source-ip",
+        "PCI-DSS.10.3.timestamp-format",
+        "PCI-DSS.7.2.least-privilege",
+        "PCI-DSS.8.1.unique-id",
+        "PCI-DSS.dq.3.transaction-attribution"
+      ],
+      "tp": 15,
+      "fp": 0,
+      "fn": 0,
+      "tn": 28,
+      "fired": [
+        "ISO-27001.A.9.2.1-user-registration",
+        "ISO-27001.A.9.2.2-user-access-provisioning",
+        "ISO-27001.A.9.3.1-sole-use",
+        "ISO-27001.A.12.1.1-operating-procedures",
+        "ISO-27001.A.12.4.3-clock-sync",
+        "ISO-27001.A.13.1.1-network-controls",
+        "ISO-27001.integrity.1-non-repudiation",
+        "ISO-27001.scope.1-required-field-empty",
+        "ISO-27001.scope.2-email-format",
+        "ISO-27001.scope.3-role-allowed",
+        "PCI-DSS.1.3.source-ip",
+        "PCI-DSS.7.2.least-privilege",
+        "PCI-DSS.8.1.unique-id",
+        "PCI-DSS.10.3.timestamp-format",
+        "PCI-DSS.dq.3.transaction-attribution"
+      ],
+      "missed": [],
+      "unexpected": []
+    },
+    {
+      "file": "missing_columns_ledger.csv",
+      "rows": 6,
+      "expected_failures": [
+        "ISO-27001.A.16.1.4-detect-incidents",
+        "ISO-27001.A.9.2.5-review-user-access",
+        "ISO-27001.A.9.2.6-removal-access",
+        "ISO-27001.scope.1-required-field-empty",
+        "PCI-DSS.10.2.1.event-type",
+        "PCI-DSS.12.3.1.role-assignment"
+      ],
+      "tp": 6,
+      "fp": 0,
+      "fn": 0,
+      "tn": 37,
+      "fired": [
+        "ISO-27001.A.9.2.5-review-user-access",
+        "ISO-27001.A.9.2.6-removal-access",
+        "ISO-27001.A.16.1.4-detect-incidents",
+        "ISO-27001.scope.1-required-field-empty",
+        "PCI-DSS.10.2.1.event-type",
+        "PCI-DSS.12.3.1.role-assignment"
+      ],
+      "missed": [],
+      "unexpected": []
+    },
+    {
+      "file": "sensitive_columns_ledger.csv",
+      "rows": 5,
+      "expected_failures": [
+        "PCI-DSS.3.2.2.do-not-store-sens-auth"
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 42,
+      "fired": [
+        "PCI-DSS.3.2.2.do-not-store-sens-auth"
+      ],
+      "missed": [],
+      "unexpected": []
+    },
+    {
+      "file": "unmapped_anomalies.csv",
+      "rows": 8,
+      "expected_failures": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 43,
+      "fired": [],
+      "missed": [],
+      "unexpected": []
+    }
+  ],
+  "per_file_standard": [
+    {
+      "file": "card_anomalies.csv",
+      "standard": "ISO-27001",
+      "rules": 24,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 22,
+      "judgment_rules": 2
+    },
+    {
+      "file": "card_anomalies.csv",
+      "standard": "PCI-DSS",
+      "rules": 27,
+      "tp": 7,
+      "fp": 0,
+      "fn": 0,
+      "tn": 14,
+      "judgment_rules": 6
+    },
+    {
+      "file": "clean_ledger.csv",
+      "standard": "ISO-27001",
+      "rules": 24,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 22,
+      "judgment_rules": 2
+    },
+    {
+      "file": "clean_ledger.csv",
+      "standard": "PCI-DSS",
+      "rules": 27,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 21,
+      "judgment_rules": 6
+    },
+    {
+      "file": "empty_ledger.csv",
+      "standard": "ISO-27001",
+      "rules": 24,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 21,
+      "judgment_rules": 2
+    },
+    {
+      "file": "empty_ledger.csv",
+      "standard": "PCI-DSS",
+      "rules": 27,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 20,
+      "judgment_rules": 6
+    },
+    {
+      "file": "identity_anomalies.csv",
+      "standard": "ISO-27001",
+      "rules": 24,
+      "tp": 10,
+      "fp": 0,
+      "fn": 0,
+      "tn": 12,
+      "judgment_rules": 2
+    },
+    {
+      "file": "identity_anomalies.csv",
+      "standard": "PCI-DSS",
+      "rules": 27,
+      "tp": 5,
+      "fp": 0,
+      "fn": 0,
+      "tn": 16,
+      "judgment_rules": 6
+    },
+    {
+      "file": "missing_columns_ledger.csv",
+      "standard": "ISO-27001",
+      "rules": 24,
+      "tp": 4,
+      "fp": 0,
+      "fn": 0,
+      "tn": 18,
+      "judgment_rules": 2
+    },
+    {
+      "file": "missing_columns_ledger.csv",
+      "standard": "PCI-DSS",
+      "rules": 27,
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "tn": 19,
+      "judgment_rules": 6
+    },
+    {
+      "file": "sensitive_columns_ledger.csv",
+      "standard": "ISO-27001",
+      "rules": 24,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 22,
+      "judgment_rules": 2
+    },
+    {
+      "file": "sensitive_columns_ledger.csv",
+      "standard": "PCI-DSS",
+      "rules": 27,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 20,
+      "judgment_rules": 6
+    },
+    {
+      "file": "unmapped_anomalies.csv",
+      "standard": "ISO-27001",
+      "rules": 24,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 22,
+      "judgment_rules": 2
+    },
+    {
+      "file": "unmapped_anomalies.csv",
+      "standard": "PCI-DSS",
+      "rules": 27,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 21,
+      "judgment_rules": 6
+    }
+  ],
+  "row_level": {
+    "totals": {
+      "tp": 17,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "per_rule": [
+      {
+        "rule_id": "ISO-27001.A.12.1.1-operating-procedures",
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "datasets": 1,
+        "truncated": false
+      },
+      {
+        "rule_id": "ISO-27001.A.12.4.3-clock-sync",
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "datasets": 1,
+        "truncated": false
+      },
+      {
+        "rule_id": "ISO-27001.A.13.1.1-network-controls",
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "datasets": 1,
+        "truncated": false
+      },
+      {
+        "rule_id": "ISO-27001.A.9.3.1-sole-use",
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "datasets": 1,
+        "truncated": false
+      },
+      {
+        "rule_id": "ISO-27001.scope.1-required-field-empty",
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "datasets": 1,
+        "truncated": false
+      },
+      {
+        "rule_id": "ISO-27001.scope.2-email-format",
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "datasets": 1,
+        "truncated": false
+      },
+      {
+        "rule_id": "ISO-27001.scope.3-role-allowed",
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "datasets": 1,
+        "truncated": false
+      },
+      {
+        "rule_id": "PCI-DSS.1.3.source-ip",
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "datasets": 1,
+        "truncated": false
+      },
+      {
+        "rule_id": "PCI-DSS.10.3.timestamp-format",
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "datasets": 1,
+        "truncated": false
+      },
+      {
+        "rule_id": "PCI-DSS.3.5.2.pan-nonempty",
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "datasets": 1,
+        "truncated": false
+      },
+      {
+        "rule_id": "PCI-DSS.3.5.pan-format",
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "datasets": 1,
+        "truncated": false
+      },
+      {
+        "rule_id": "PCI-DSS.3.6.expiry-format",
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "datasets": 1,
+        "truncated": false
+      },
+      {
+        "rule_id": "PCI-DSS.7.2.least-privilege",
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "datasets": 1,
+        "truncated": false
+      },
+      {
+        "rule_id": "PCI-DSS.dq.1.amount-nonnegative",
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "datasets": 1,
+        "truncated": false
+      },
+      {
+        "rule_id": "PCI-DSS.dq.2.currency-allowed",
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "datasets": 1,
+        "truncated": false
+      },
+      {
+        "rule_id": "PCI-DSS.dq.4.no-empty-key",
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "datasets": 1,
+        "truncated": false
+      }
+    ]
+  },
+  "judgments": [
+    {
+      "file": "card_anomalies.csv",
+      "standard": "ISO-27001",
+      "rule_id": "ISO-27001.A.15.1.1-supplier-policy",
+      "status": "needs_review"
+    },
+    {
+      "file": "card_anomalies.csv",
+      "standard": "ISO-27001",
+      "rule_id": "ISO-27001.A.5.1.1-policy",
+      "status": "needs_review"
+    },
+    {
+      "file": "card_anomalies.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.1.1.firewall-config",
+      "status": "needs_review"
+    },
+    {
+      "file": "card_anomalies.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.11.2.scan-evidence",
+      "status": "needs_review"
+    },
+    {
+      "file": "card_anomalies.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.12.1.policy-evidence",
+      "status": "needs_review"
+    },
+    {
+      "file": "card_anomalies.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.3.1.retention",
+      "status": "needs_review"
+    },
+    {
+      "file": "card_anomalies.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.3.4.encrypt-pan",
+      "status": "needs_review"
+    },
+    {
+      "file": "card_anomalies.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.8.2.3.mfa-remote",
+      "status": "needs_review"
+    },
+    {
+      "file": "clean_ledger.csv",
+      "standard": "ISO-27001",
+      "rule_id": "ISO-27001.A.15.1.1-supplier-policy",
+      "status": "needs_review"
+    },
+    {
+      "file": "clean_ledger.csv",
+      "standard": "ISO-27001",
+      "rule_id": "ISO-27001.A.5.1.1-policy",
+      "status": "needs_review"
+    },
+    {
+      "file": "clean_ledger.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.1.1.firewall-config",
+      "status": "needs_review"
+    },
+    {
+      "file": "clean_ledger.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.11.2.scan-evidence",
+      "status": "needs_review"
+    },
+    {
+      "file": "clean_ledger.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.12.1.policy-evidence",
+      "status": "needs_review"
+    },
+    {
+      "file": "clean_ledger.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.3.1.retention",
+      "status": "needs_review"
+    },
+    {
+      "file": "clean_ledger.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.3.4.encrypt-pan",
+      "status": "needs_review"
+    },
+    {
+      "file": "clean_ledger.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.8.2.3.mfa-remote",
+      "status": "needs_review"
+    },
+    {
+      "file": "empty_ledger.csv",
+      "standard": "ISO-27001",
+      "rule_id": "ISO-27001.A.15.1.1-supplier-policy",
+      "status": "needs_review"
+    },
+    {
+      "file": "empty_ledger.csv",
+      "standard": "ISO-27001",
+      "rule_id": "ISO-27001.A.5.1.1-policy",
+      "status": "needs_review"
+    },
+    {
+      "file": "empty_ledger.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.1.1.firewall-config",
+      "status": "needs_review"
+    },
+    {
+      "file": "empty_ledger.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.11.2.scan-evidence",
+      "status": "needs_review"
+    },
+    {
+      "file": "empty_ledger.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.12.1.policy-evidence",
+      "status": "needs_review"
+    },
+    {
+      "file": "empty_ledger.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.3.1.retention",
+      "status": "needs_review"
+    },
+    {
+      "file": "empty_ledger.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.3.4.encrypt-pan",
+      "status": "needs_review"
+    },
+    {
+      "file": "empty_ledger.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.8.2.3.mfa-remote",
+      "status": "needs_review"
+    },
+    {
+      "file": "identity_anomalies.csv",
+      "standard": "ISO-27001",
+      "rule_id": "ISO-27001.A.15.1.1-supplier-policy",
+      "status": "needs_review"
+    },
+    {
+      "file": "identity_anomalies.csv",
+      "standard": "ISO-27001",
+      "rule_id": "ISO-27001.A.5.1.1-policy",
+      "status": "needs_review"
+    },
+    {
+      "file": "identity_anomalies.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.1.1.firewall-config",
+      "status": "needs_review"
+    },
+    {
+      "file": "identity_anomalies.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.11.2.scan-evidence",
+      "status": "needs_review"
+    },
+    {
+      "file": "identity_anomalies.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.12.1.policy-evidence",
+      "status": "needs_review"
+    },
+    {
+      "file": "identity_anomalies.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.3.1.retention",
+      "status": "needs_review"
+    },
+    {
+      "file": "identity_anomalies.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.3.4.encrypt-pan",
+      "status": "needs_review"
+    },
+    {
+      "file": "identity_anomalies.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.8.2.3.mfa-remote",
+      "status": "needs_review"
+    },
+    {
+      "file": "missing_columns_ledger.csv",
+      "standard": "ISO-27001",
+      "rule_id": "ISO-27001.A.15.1.1-supplier-policy",
+      "status": "needs_review"
+    },
+    {
+      "file": "missing_columns_ledger.csv",
+      "standard": "ISO-27001",
+      "rule_id": "ISO-27001.A.5.1.1-policy",
+      "status": "needs_review"
+    },
+    {
+      "file": "missing_columns_ledger.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.1.1.firewall-config",
+      "status": "needs_review"
+    },
+    {
+      "file": "missing_columns_ledger.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.11.2.scan-evidence",
+      "status": "needs_review"
+    },
+    {
+      "file": "missing_columns_ledger.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.12.1.policy-evidence",
+      "status": "needs_review"
+    },
+    {
+      "file": "missing_columns_ledger.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.3.1.retention",
+      "status": "needs_review"
+    },
+    {
+      "file": "missing_columns_ledger.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.3.4.encrypt-pan",
+      "status": "needs_review"
+    },
+    {
+      "file": "missing_columns_ledger.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.8.2.3.mfa-remote",
+      "status": "needs_review"
+    },
+    {
+      "file": "sensitive_columns_ledger.csv",
+      "standard": "ISO-27001",
+      "rule_id": "ISO-27001.A.15.1.1-supplier-policy",
+      "status": "needs_review"
+    },
+    {
+      "file": "sensitive_columns_ledger.csv",
+      "standard": "ISO-27001",
+      "rule_id": "ISO-27001.A.5.1.1-policy",
+      "status": "needs_review"
+    },
+    {
+      "file": "sensitive_columns_ledger.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.1.1.firewall-config",
+      "status": "needs_review"
+    },
+    {
+      "file": "sensitive_columns_ledger.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.11.2.scan-evidence",
+      "status": "needs_review"
+    },
+    {
+      "file": "sensitive_columns_ledger.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.12.1.policy-evidence",
+      "status": "needs_review"
+    },
+    {
+      "file": "sensitive_columns_ledger.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.3.1.retention",
+      "status": "needs_review"
+    },
+    {
+      "file": "sensitive_columns_ledger.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.3.4.encrypt-pan",
+      "status": "needs_review"
+    },
+    {
+      "file": "sensitive_columns_ledger.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.8.2.3.mfa-remote",
+      "status": "needs_review"
+    },
+    {
+      "file": "unmapped_anomalies.csv",
+      "standard": "ISO-27001",
+      "rule_id": "ISO-27001.A.15.1.1-supplier-policy",
+      "status": "needs_review"
+    },
+    {
+      "file": "unmapped_anomalies.csv",
+      "standard": "ISO-27001",
+      "rule_id": "ISO-27001.A.5.1.1-policy",
+      "status": "needs_review"
+    },
+    {
+      "file": "unmapped_anomalies.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.1.1.firewall-config",
+      "status": "needs_review"
+    },
+    {
+      "file": "unmapped_anomalies.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.11.2.scan-evidence",
+      "status": "needs_review"
+    },
+    {
+      "file": "unmapped_anomalies.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.12.1.policy-evidence",
+      "status": "needs_review"
+    },
+    {
+      "file": "unmapped_anomalies.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.3.1.retention",
+      "status": "needs_review"
+    },
+    {
+      "file": "unmapped_anomalies.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.3.4.encrypt-pan",
+      "status": "needs_review"
+    },
+    {
+      "file": "unmapped_anomalies.csv",
+      "standard": "PCI-DSS",
+      "rule_id": "PCI-DSS.8.2.3.mfa-remote",
+      "status": "needs_review"
+    }
+  ],
+  "below_floor": [],
+  "coverage_gaps": [
+    {
+      "file": "unmapped_anomalies.csv",
+      "row_index": 0,
+      "class": "off_hours_privileged_login",
+      "note": "privileged login at 02:37 outside business hours",
+      "no_mapped_rule": true,
+      "why": "No scoped rule expresses a time-of-day/behavioural condition; would need a new threshold/behavioural check type."
+    },
+    {
+      "file": "unmapped_anomalies.csv",
+      "row_index": 1,
+      "class": "failed_login_spike",
+      "note": "repeated auth failures",
+      "no_mapped_rule": true,
+      "why": "No scoped rule aggregates failed auth events per user/time window (the current sets only check that an event_type column exists)."
+    },
+    {
+      "file": "unmapped_anomalies.csv",
+      "row_index": 2,
+      "class": "failed_login_spike",
+      "note": "repeated auth failures",
+      "no_mapped_rule": true,
+      "why": "No scoped rule aggregates failed auth events per user/time window (the current sets only check that an event_type column exists)."
+    },
+    {
+      "file": "unmapped_anomalies.csv",
+      "row_index": 3,
+      "class": "failed_login_spike",
+      "note": "repeated auth failures followed by lock-out",
+      "no_mapped_rule": true,
+      "why": "No scoped rule aggregates failed auth events per user/time window (the current sets only check that an event_type column exists)."
+    },
+    {
+      "file": "unmapped_anomalies.csv",
+      "row_index": 4,
+      "class": "high_value_outlier",
+      "note": "amount far above baseline",
+      "no_mapped_rule": true,
+      "why": "No scoped rule bounds transaction magnitude above (only amount >= 0)."
+    },
+    {
+      "file": "unmapped_anomalies.csv",
+      "row_index": 5,
+      "class": "high_value_outlier",
+      "note": "amount far above baseline",
+      "no_mapped_rule": true,
+      "why": "No scoped rule bounds transaction magnitude above (only amount >= 0)."
+    },
+    {
+      "file": "unmapped_anomalies.csv",
+      "row_index": 6,
+      "class": "mfa_gap_privileged_account",
+      "note": "privileged role with mfa_enabled=false",
+      "no_mapped_rule": true,
+      "why": "PCI-DSS.8.2.1 only checks that an mfa_enabled COLUMN exists, and PCI-DSS.8.2.3 is judgment-assisted (needs_review) \u2014 no deterministic rule asserts mfa_enabled=true for privileged roles."
+    },
+    {
+      "file": "unmapped_anomalies.csv",
+      "row_index": 7,
+      "class": "off_hours_foreign_access",
+      "note": "out-of-hours access from an unusual address",
+      "no_mapped_rule": true,
+      "why": "No scoped rule compares access time or origin against a baseline."
+    }
+  ],
+  "stamp": "20260924T195129Z"
+}

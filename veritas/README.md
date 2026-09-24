@@ -148,3 +148,22 @@ Added in `veritas/app/uploads/`:
     own tenant's audits (anything else → 404, no existence leak); an owner /
     auditor request without the header sees all. A real token/JWT replaces the
     header as the tenant-scoping seam in Phase 1.
+
+## Block A — audit quality & trust foundation (`quality/`)
+Findings are only useful if they are *measurably* right, so the engine now ships
+with a ground-truth labeled corpus and a precision/recall harness (see
+`quality/README.md` for the full guide):
+
+- `quality/corpus/` — 7 labeled CSV datasets (55 rows) + `manifest.json` mapping
+  every seeded anomaly to the rule id it must trigger, including two datasets
+  that must produce **no** finding (true negatives → precision is measured, not
+  assumed). Deterministic, fixed seed, regenerated/verified by
+  `python -m quality.corpus write|check`.
+- `quality/harness.py` — runs the real Normalize → Match stages over the corpus
+  through the LLM provider seam (noop by default, `VERITAS_LLM_PROVIDER=anthropic`
+  for the real model; skips cleanly without a key) and reports per-rule
+  precision/recall/F1 to `quality/reports/accuracy-<provider>-<ts>.json|.md`.
+- `tests/test_quality_accuracy.py` — the regression guard: 14 tests that pin the
+  accuracy floors (precision and recall ≥ 0.95 per rule and overall) and the
+  measured noop baseline, so accuracy cannot silently regress. No network: the
+  real-provider code path is exercised through a mocked HTTP transport.
