@@ -1,0 +1,522 @@
+{
+  "corpus_version": 1,
+  "seed": 20260924,
+  "generator": "veritas/quality/corpus.py",
+  "note": "Ground-truth labels for the Block A accuracy harness. expected_failures = rule ids that MUST report status='failed' for this dataset; everything else must not fire. row_expectations additionally pin the exact 0-based data row a row-scoped rule must flag.",
+  "files": [
+    {
+      "name": "clean_ledger.csv",
+      "kind": "csv",
+      "description": "All-reference clean ledger: every column present, every value well-formed. All 43 deterministic rules must pass (precision anchor).",
+      "columns": [
+        "transaction_id",
+        "account_id",
+        "user_id",
+        "username",
+        "role",
+        "access_level",
+        "status",
+        "timestamp",
+        "event_type",
+        "source_ip",
+        "email",
+        "classification",
+        "patch_level",
+        "backup_time",
+        "amount",
+        "currency",
+        "card_number",
+        "masked_pan",
+        "expiry",
+        "holder_name",
+        "mfa_enabled"
+      ],
+      "row_count": 12,
+      "sha256": "2939c3aae5cac5d3f3d1794c32edd168166e7f3c44ae195bfad9da8a5a697660",
+      "expected_failures": [],
+      "dataset_scoped_failures": [],
+      "row_expectations": [],
+      "uncovered_anomalies": []
+    },
+    {
+      "name": "identity_anomalies.csv",
+      "kind": "csv",
+      "description": "Identity, access-control and logging anomalies (10 seeded rows).",
+      "columns": [
+        "transaction_id",
+        "account_id",
+        "user_id",
+        "username",
+        "role",
+        "access_level",
+        "status",
+        "timestamp",
+        "event_type",
+        "source_ip",
+        "email",
+        "classification",
+        "patch_level",
+        "backup_time",
+        "amount",
+        "currency",
+        "card_number",
+        "masked_pan",
+        "expiry",
+        "holder_name",
+        "mfa_enabled"
+      ],
+      "row_count": 14,
+      "sha256": "202f524d2a343713a9edc891331723715f759d549f3a51adec97c40fdcd04e36",
+      "expected_failures": [
+        "ISO-27001.A.12.1.1-operating-procedures",
+        "ISO-27001.A.12.4.3-clock-sync",
+        "ISO-27001.A.13.1.1-network-controls",
+        "ISO-27001.A.9.2.1-user-registration",
+        "ISO-27001.A.9.2.2-user-access-provisioning",
+        "ISO-27001.A.9.3.1-sole-use",
+        "ISO-27001.integrity.1-non-repudiation",
+        "ISO-27001.scope.1-required-field-empty",
+        "ISO-27001.scope.2-email-format",
+        "ISO-27001.scope.3-role-allowed",
+        "PCI-DSS.1.3.source-ip",
+        "PCI-DSS.10.3.timestamp-format",
+        "PCI-DSS.7.2.least-privilege",
+        "PCI-DSS.8.1.unique-id",
+        "PCI-DSS.dq.3.transaction-attribution"
+      ],
+      "dataset_scoped_failures": [
+        "ISO-27001.A.9.2.1-user-registration",
+        "ISO-27001.A.9.2.2-user-access-provisioning",
+        "ISO-27001.integrity.1-non-repudiation",
+        "PCI-DSS.8.1.unique-id",
+        "PCI-DSS.dq.3.transaction-attribution"
+      ],
+      "row_expectations": [
+        {
+          "index": 5,
+          "expects": [
+            "ISO-27001.A.12.1.1-operating-procedures"
+          ],
+          "anomaly": "user_id contains whitespace"
+        },
+        {
+          "index": 6,
+          "expects": [
+            "ISO-27001.A.9.3.1-sole-use"
+          ],
+          "anomaly": "empty user_id (no accountable principal)"
+        },
+        {
+          "index": 7,
+          "expects": [
+            "ISO-27001.A.12.4.3-clock-sync",
+            "PCI-DSS.10.3.timestamp-format"
+          ],
+          "anomaly": "non-ISO-8601 timestamp"
+        },
+        {
+          "index": 8,
+          "expects": [
+            "ISO-27001.A.13.1.1-network-controls",
+            "PCI-DSS.1.3.source-ip"
+          ],
+          "anomaly": "implausible source_ip"
+        },
+        {
+          "index": 9,
+          "expects": [
+            "ISO-27001.scope.2-email-format"
+          ],
+          "anomaly": "malformed email address"
+        },
+        {
+          "index": 10,
+          "expects": [
+            "ISO-27001.scope.3-role-allowed",
+            "PCI-DSS.7.2.least-privilege"
+          ],
+          "anomaly": "role outside the least-privilege allowlist"
+        },
+        {
+          "index": 11,
+          "expects": [
+            "ISO-27001.scope.1-required-field-empty"
+          ],
+          "anomaly": "empty required status field"
+        }
+      ],
+      "uncovered_anomalies": []
+    },
+    {
+      "name": "missing_columns_ledger.csv",
+      "kind": "csv",
+      "description": "Ledger missing role/status/event_type/masked_pan/holder_name \u2014 exercises presence rules and the 'column missing' branch of threshold rules.",
+      "columns": [
+        "transaction_id",
+        "account_id",
+        "user_id",
+        "username",
+        "access_level",
+        "timestamp",
+        "source_ip",
+        "email",
+        "classification",
+        "patch_level",
+        "backup_time",
+        "amount",
+        "currency",
+        "card_number",
+        "expiry",
+        "mfa_enabled"
+      ],
+      "row_count": 6,
+      "sha256": "c030fe9fc9b4eadc9dae050298bfa5bfb8bc00930bc22e75c883a1130d7df4df",
+      "expected_failures": [
+        "ISO-27001.A.16.1.4-detect-incidents",
+        "ISO-27001.A.9.2.5-review-user-access",
+        "ISO-27001.A.9.2.6-removal-access",
+        "ISO-27001.scope.1-required-field-empty",
+        "PCI-DSS.10.2.1.event-type",
+        "PCI-DSS.12.3.1.role-assignment"
+      ],
+      "dataset_scoped_failures": [
+        "ISO-27001.A.16.1.4-detect-incidents",
+        "ISO-27001.A.9.2.5-review-user-access",
+        "ISO-27001.A.9.2.6-removal-access",
+        "ISO-27001.scope.1-required-field-empty",
+        "PCI-DSS.10.2.1.event-type",
+        "PCI-DSS.12.3.1.role-assignment"
+      ],
+      "row_expectations": [],
+      "uncovered_anomalies": []
+    },
+    {
+      "name": "sensitive_columns_ledger.csv",
+      "kind": "csv",
+      "description": "Clean ledger that additionally stores cvv + ssn columns \u2014 exactly one deterministic rule may fire (precision isolation test).",
+      "columns": [
+        "transaction_id",
+        "account_id",
+        "user_id",
+        "username",
+        "role",
+        "access_level",
+        "status",
+        "timestamp",
+        "event_type",
+        "source_ip",
+        "email",
+        "classification",
+        "patch_level",
+        "backup_time",
+        "amount",
+        "currency",
+        "card_number",
+        "masked_pan",
+        "expiry",
+        "holder_name",
+        "mfa_enabled",
+        "cvv",
+        "ssn"
+      ],
+      "row_count": 5,
+      "sha256": "669bc745793663eee1a0f258383f0b27ab1d461499192f58d2679f6fdc05eb90",
+      "expected_failures": [
+        "PCI-DSS.3.2.2.do-not-store-sens-auth"
+      ],
+      "dataset_scoped_failures": [
+        "PCI-DSS.3.2.2.do-not-store-sens-auth"
+      ],
+      "row_expectations": [],
+      "uncovered_anomalies": []
+    },
+    {
+      "name": "empty_ledger.csv",
+      "kind": "csv",
+      "description": "Header-only dataset: aggregate row-count rules must fire, nothing else.",
+      "columns": [
+        "transaction_id",
+        "account_id",
+        "user_id",
+        "username",
+        "role",
+        "access_level",
+        "status",
+        "timestamp",
+        "event_type",
+        "source_ip",
+        "email",
+        "classification",
+        "patch_level",
+        "backup_time",
+        "amount",
+        "currency",
+        "card_number",
+        "masked_pan",
+        "expiry",
+        "holder_name",
+        "mfa_enabled"
+      ],
+      "row_count": 0,
+      "sha256": "cdc9045a6b14b4b6c203aeec5dd2efc3cf777fb382eb0279fd95a320b99c99f5",
+      "expected_failures": [
+        "ISO-27001.A.12.4.1-event-logging",
+        "PCI-DSS.10.2.audit-log"
+      ],
+      "dataset_scoped_failures": [
+        "ISO-27001.A.12.4.1-event-logging",
+        "PCI-DSS.10.2.audit-log"
+      ],
+      "row_expectations": [],
+      "uncovered_anomalies": []
+    },
+    {
+      "name": "card_anomalies.csv",
+      "kind": "csv",
+      "description": "Cardholder-data (PAN/expiry) and financial data-quality anomalies.",
+      "columns": [
+        "transaction_id",
+        "account_id",
+        "user_id",
+        "username",
+        "role",
+        "access_level",
+        "status",
+        "timestamp",
+        "event_type",
+        "source_ip",
+        "email",
+        "classification",
+        "patch_level",
+        "backup_time",
+        "amount",
+        "currency",
+        "card_number",
+        "masked_pan",
+        "expiry",
+        "holder_name",
+        "mfa_enabled"
+      ],
+      "row_count": 10,
+      "sha256": "9623ceed6f7b0e07221616b875957563708ff18a6546ba3d905753b324a851a5",
+      "expected_failures": [
+        "PCI-DSS.3.5.2.pan-nonempty",
+        "PCI-DSS.3.5.3.unique-pan",
+        "PCI-DSS.3.5.pan-format",
+        "PCI-DSS.3.6.expiry-format",
+        "PCI-DSS.dq.1.amount-nonnegative",
+        "PCI-DSS.dq.2.currency-allowed",
+        "PCI-DSS.dq.4.no-empty-key"
+      ],
+      "dataset_scoped_failures": [
+        "PCI-DSS.3.5.2.pan-nonempty",
+        "PCI-DSS.3.5.3.unique-pan",
+        "PCI-DSS.3.5.pan-format",
+        "PCI-DSS.3.6.expiry-format",
+        "PCI-DSS.dq.1.amount-nonnegative",
+        "PCI-DSS.dq.2.currency-allowed",
+        "PCI-DSS.dq.4.no-empty-key"
+      ],
+      "row_expectations": [
+        {
+          "index": 1,
+          "expects": [
+            "PCI-DSS.3.5.pan-format"
+          ],
+          "anomaly": "PAN stored as free text (grouped digits)"
+        },
+        {
+          "index": 2,
+          "expects": [
+            "PCI-DSS.3.5.pan-format"
+          ],
+          "anomaly": "PAN truncated below 13 digits"
+        },
+        {
+          "index": 3,
+          "expects": [
+            "PCI-DSS.3.5.2.pan-nonempty"
+          ],
+          "anomaly": "empty PAN value"
+        },
+        {
+          "index": 6,
+          "expects": [
+            "PCI-DSS.3.6.expiry-format"
+          ],
+          "anomaly": "malformed card expiry"
+        },
+        {
+          "index": 7,
+          "expects": [
+            "PCI-DSS.dq.1.amount-nonnegative"
+          ],
+          "anomaly": "negative transaction amount"
+        },
+        {
+          "index": 8,
+          "expects": [
+            "PCI-DSS.dq.2.currency-allowed"
+          ],
+          "anomaly": "currency not a 3-letter ISO code"
+        },
+        {
+          "index": 9,
+          "expects": [
+            "PCI-DSS.dq.4.no-empty-key"
+          ],
+          "anomaly": "empty account_id"
+        }
+      ],
+      "uncovered_anomalies": []
+    },
+    {
+      "name": "unmapped_anomalies.csv",
+      "kind": "csv",
+      "description": "Anomaly classes with NO mapped scoped rule (off-hours privileged logins, failed-login spike, MFA gaps, high-value outliers). Any finding here would be a false positive.",
+      "columns": [
+        "transaction_id",
+        "account_id",
+        "user_id",
+        "username",
+        "role",
+        "access_level",
+        "status",
+        "timestamp",
+        "event_type",
+        "source_ip",
+        "email",
+        "classification",
+        "patch_level",
+        "backup_time",
+        "amount",
+        "currency",
+        "card_number",
+        "masked_pan",
+        "expiry",
+        "holder_name",
+        "mfa_enabled"
+      ],
+      "row_count": 8,
+      "sha256": "4e79dfea5d53af26b9c4a78c1d8aee9d0dbe2dd92f16eb169d5f90f7fa76b728",
+      "expected_failures": [],
+      "dataset_scoped_failures": [],
+      "row_expectations": [],
+      "uncovered_anomalies": [
+        {
+          "index": 0,
+          "class": "off_hours_privileged_login",
+          "note": "privileged login at 02:37 outside business hours"
+        },
+        {
+          "index": 1,
+          "class": "failed_login_spike",
+          "note": "repeated auth failures"
+        },
+        {
+          "index": 2,
+          "class": "failed_login_spike",
+          "note": "repeated auth failures"
+        },
+        {
+          "index": 3,
+          "class": "failed_login_spike",
+          "note": "repeated auth failures followed by lock-out"
+        },
+        {
+          "index": 4,
+          "class": "high_value_outlier",
+          "note": "amount far above baseline"
+        },
+        {
+          "index": 5,
+          "class": "high_value_outlier",
+          "note": "amount far above baseline"
+        },
+        {
+          "index": 6,
+          "class": "mfa_gap_privileged_account",
+          "note": "privileged role with mfa_enabled=false"
+        },
+        {
+          "index": 7,
+          "class": "off_hours_foreign_access",
+          "note": "out-of-hours access from an unusual address"
+        }
+      ]
+    }
+  ],
+  "coverage_gaps": [
+    {
+      "file": "unmapped_anomalies.csv",
+      "row_index": 0,
+      "class": "off_hours_privileged_login",
+      "note": "privileged login at 02:37 outside business hours",
+      "no_mapped_rule": true,
+      "why": "No scoped rule expresses a time-of-day/behavioural condition; would need a new threshold/behavioural check type."
+    },
+    {
+      "file": "unmapped_anomalies.csv",
+      "row_index": 1,
+      "class": "failed_login_spike",
+      "note": "repeated auth failures",
+      "no_mapped_rule": true,
+      "why": "No scoped rule aggregates failed auth events per user/time window (the current sets only check that an event_type column exists)."
+    },
+    {
+      "file": "unmapped_anomalies.csv",
+      "row_index": 2,
+      "class": "failed_login_spike",
+      "note": "repeated auth failures",
+      "no_mapped_rule": true,
+      "why": "No scoped rule aggregates failed auth events per user/time window (the current sets only check that an event_type column exists)."
+    },
+    {
+      "file": "unmapped_anomalies.csv",
+      "row_index": 3,
+      "class": "failed_login_spike",
+      "note": "repeated auth failures followed by lock-out",
+      "no_mapped_rule": true,
+      "why": "No scoped rule aggregates failed auth events per user/time window (the current sets only check that an event_type column exists)."
+    },
+    {
+      "file": "unmapped_anomalies.csv",
+      "row_index": 4,
+      "class": "high_value_outlier",
+      "note": "amount far above baseline",
+      "no_mapped_rule": true,
+      "why": "No scoped rule bounds transaction magnitude above (only amount >= 0)."
+    },
+    {
+      "file": "unmapped_anomalies.csv",
+      "row_index": 5,
+      "class": "high_value_outlier",
+      "note": "amount far above baseline",
+      "no_mapped_rule": true,
+      "why": "No scoped rule bounds transaction magnitude above (only amount >= 0)."
+    },
+    {
+      "file": "unmapped_anomalies.csv",
+      "row_index": 6,
+      "class": "mfa_gap_privileged_account",
+      "note": "privileged role with mfa_enabled=false",
+      "no_mapped_rule": true,
+      "why": "PCI-DSS.8.2.1 only checks that an mfa_enabled COLUMN exists, and PCI-DSS.8.2.3 is judgment-assisted (needs_review) \u2014 no deterministic rule asserts mfa_enabled=true for privileged roles."
+    },
+    {
+      "file": "unmapped_anomalies.csv",
+      "row_index": 7,
+      "class": "off_hours_foreign_access",
+      "note": "out-of-hours access from an unusual address",
+      "no_mapped_rule": true,
+      "why": "No scoped rule compares access time or origin against a baseline."
+    }
+  ],
+  "totals": {
+    "files": 7,
+    "rows": 55,
+    "expected_rule_fires": 31,
+    "expected_row_level_fires": 17,
+    "uncovered_anomaly_rows": 8
+  }
+}

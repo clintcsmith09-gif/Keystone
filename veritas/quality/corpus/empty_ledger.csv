@@ -1,0 +1,1 @@
+transaction_id,account_id,user_id,username,role,access_level,status,timestamp,event_type,source_ip,email,classification,patch_level,backup_time,amount,currency,card_number,masked_pan,expiry,holder_name,mfa_enabled

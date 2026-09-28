@@ -1,0 +1,7 @@
+transaction_id,account_id,user_id,username,access_level,timestamp,source_ip,email,classification,patch_level,backup_time,amount,currency,card_number,expiry,mfa_enabled
+TXN-1000,ACC-2000,usr_3000,user000.ops,standard,2026-08-01T09:00:00,10.20.000.020,user000@agritech.co.za,internal,2026.08.1,2026-08-01T02:00:00,1842.83,ZAR,4651997122440937,12/27,true
+TXN-1001,ACC-2001,usr_3001,user001.ops,standard,2026-08-02T10:07:00,10.20.001.021,user001@agritech.co.za,internal,2026.08.1,2026-08-01T02:00:00,1242.58,ZAR,4572496365492288,12/27,true
+TXN-1002,ACC-2002,usr_3002,user002.ops,standard,2026-08-03T11:14:00,10.20.002.022,user002@agritech.co.za,internal,2026.08.1,2026-08-01T02:00:00,1544.02,ZAR,4246100156512566,12/27,true
+TXN-1003,ACC-2003,usr_3003,user003.ops,standard,2026-08-04T12:21:00,10.20.003.023,user003@agritech.co.za,internal,2026.08.1,2026-08-01T02:00:00,1046.74,ZAR,4524059278974340,12/27,true
+TXN-1004,ACC-2004,usr_3004,user004.ops,standard,2026-08-05T13:28:00,10.20.004.024,user004@agritech.co.za,internal,2026.08.1,2026-08-01T02:00:00,2361.88,ZAR,4169852593817375,12/27,true
+TXN-1005,ACC-2005,usr_3005,user005.ops,standard,2026-08-06T14:35:00,10.20.005.025,user005@agritech.co.za,internal,2026.08.1,2026-08-01T02:00:00,99.07,ZAR,4499244353820158,12/27,true
