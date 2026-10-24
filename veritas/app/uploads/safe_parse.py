@@ -27,9 +27,10 @@ from pathlib import Path
 
 CSV = "csv"
 JSON = "json"
+NDJSON = "ndjson"
 XLSX = "xlsx"
 PARQUET = "parquet"
-KINDS = (CSV, JSON, XLSX, PARQUET)
+KINDS = (CSV, JSON, NDJSON, XLSX, PARQUET)
 
 DEFAULT_ROW_CAP = 100_000
 DEFAULT_SHEET_CAP = 64
@@ -53,6 +54,17 @@ def _probe_csv(path: Path, row_cap: int) -> None:
 def _probe_json(path: Path) -> None:
     with path.open("r", encoding="utf-8") as fh:
         json.load(fh)
+
+
+def _probe_ndjson(path: Path, row_cap: int) -> None:
+    # One JSON object per line; each line must parse on its own.
+    with path.open("r", encoding="utf-8-sig") as fh:
+        for i, line in enumerate(fh):
+            if i >= row_cap:
+                break
+            line = line.strip()
+            if line:
+                json.loads(line)
 
 
 def _probe_xlsx(path: Path, row_cap: int, sheet_cap: int) -> None:
@@ -91,6 +103,8 @@ def probe(kind: str, path: Path, row_cap: int = DEFAULT_ROW_CAP) -> None:
         _probe_csv(path, row_cap)
     elif kind == JSON:
         _probe_json(path)
+    elif kind == NDJSON:
+        _probe_ndjson(path, row_cap)
     elif kind == XLSX:
         _probe_xlsx(path, row_cap, DEFAULT_SHEET_CAP)
     elif kind == PARQUET:

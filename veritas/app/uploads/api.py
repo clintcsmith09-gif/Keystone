@@ -26,6 +26,7 @@ from starlette.concurrency import run_in_threadpool
 from ..config import get_settings
 from ..storage import get_storage
 from . import multipart, validation
+from .errors import make_error
 from .service import (
     get_upload,
     insert_upload,
@@ -38,12 +39,16 @@ from .service import (
 router = APIRouter(prefix="/uploads", tags=["uploads"])
 
 
-def _rejected_body(upload_id: str, filename: str, reason: str) -> dict:
+def _rejected_body(upload_id: str, filename: str, reason: str,
+                   code: str = "parse_error") -> dict:
+    # Additive (Block B): `errors` carries the structured, human-readable form of
+    # `reject_reason`; existing keys and their meaning are unchanged.
     return {
         "upload_id": upload_id,
         "status": "rejected_upload",
         "filename": filename,
         "reject_reason": reason,
+        "errors": [make_error(code, reason, file=filename, rule="ingest.parse")],
     }
 
 
@@ -104,7 +109,13 @@ async def create_upload(request: Request) -> JSONResponse:
         try:
             ext = validation.check_type_allowlist(part.filename, part.content_type)
         except validation.ValidationError as exc:
-            return JSONResponse({"detail": exc.reason}, status_code=exc.http_status)
+            return JSONResponse(
+                {"detail": exc.reason,
+                 "errors": [make_error(
+                     "unsupported_type" if exc.http_status == 415 else "type_mismatch",
+                     exc.reason, file=part.filename, rule="ingest.format")]},
+                status_code=exc.http_status,
+            )
 
         # Give the spooled temp file the real extension: openpyxl (gate 3)
         # infers the workbook format from the filename suffix.

@@ -55,6 +55,9 @@ class RuleSet:
     standard: str
     version: int
     rules: tuple[Rule, ...]
+    # Block B: optional per-rule-set ingestion profile (see app/audit/profiles.py
+    # and docs/ingestion.md). Empty dict = no profile = pre-Block-B behaviour.
+    ingest: dict = field(default_factory=dict)
 
     def by_id(self, rule_id: str) -> Rule | None:
         for r in self.rules:
@@ -97,7 +100,10 @@ def load_ruleset(path: Path) -> RuleSet:
     rules = tuple(_parse_rule(standard, version, r) for r in raw_rules)
     if not rules:
         raise ValueError(f"{standard} v{version}: rule set is empty")
-    return RuleSet(standard=standard, version=version, rules=rules)
+    ingest = data.get("ingest") or {}
+    if not isinstance(ingest, dict):
+        raise ValueError(f"{standard} v{version}: 'ingest' must be a mapping")
+    return RuleSet(standard=standard, version=version, rules=rules, ingest=ingest)
 
 
 def load_all(rules_dir: Path | None = None) -> dict[str, RuleSet]:

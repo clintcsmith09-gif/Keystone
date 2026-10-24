@@ -16,6 +16,7 @@ import json
 from ..config import Settings
 from ..storage import get_storage
 from . import normalize as normalize_mod
+from . import profiles
 from . import repo, report as report_mod, matcher as matcher_mod
 from . import quote as quote_mod
 from . import cost_gate, cost_gate_repo
@@ -44,13 +45,30 @@ def artifact_key(run_id: str, stage: str) -> str:
 
 
 # --- individual stage bodies ---------------------------------------------------
-async def _run_normalize(settings: Settings, storage, run: dict, llm) -> tuple:
+async def _run_normalize(settings: Settings, storage, run: dict, llm,
+                         rule_set=None) -> tuple:
     upload = await repo.get_upload(settings, run["upload_id"])
     if upload is None:
         raise RuntimeError("upload no longer available")
     kind = normalize_mod.kind_from_path(upload["filename"])
     raw = storage.get(upload["storage_key"])
-    view = normalize_mod.normalize(raw, kind=kind, source=upload["filename"])
+    # Block B: the rule set's optional ingest profile supplies CSV/XLSX options
+    # (delimiter, quotechar, sheet) and the column alias map. Absent profile =
+    # pre-Block-B behaviour, byte for byte.
+    profile = None
+    if rule_set is not None:
+        profile = profiles.profile_from_dict(
+            rule_set.standard, getattr(rule_set, "ingest", None),
+            version=rule_set.version,
+        )
+    view = normalize_mod.normalize(
+        raw, kind=kind, source=upload["filename"],
+        options=profile.options if profile else None,
+    )
+    if profile is not None:
+        view, _report = profiles.apply_profile(
+            view, profile, file=upload["filename"]
+        )
     out_ref = artifact_key(run["run_id"], "normalize")
     storage.put(out_ref, json.dumps(view).encode("utf-8"), content_type="application/json")
     return out_ref, 0, 0
@@ -123,7 +141,7 @@ async def _run_quote(settings: Settings, storage, run: dict, llm) -> tuple:
 
 
 _STAGE_BODIES = {
-    "normalize": lambda s, storage, run, llm, rs: _run_normalize(s, storage, run, llm),
+    "normalize": lambda s, storage, run, llm, rs: _run_normalize(s, storage, run, llm, rs),
     "match": _run_match,
     "report": _run_report,
     "quote": lambda s, storage, run, llm, rs: _run_quote(s, storage, run, llm),

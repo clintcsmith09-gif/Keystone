@@ -237,3 +237,75 @@ rules:
     description: account_id must not be empty on any row.
     params: { column: account_id, op: "ne", value: "", per_row: true }
     llm_assist: false
+
+# --- Ingest profile (Block B) -------------------------------------------------
+# Declares the fields a PCI-DSS audit expects on the normalized ledger and the
+# source-column aliases that map onto them. Consumed by app/audit/profiles.py;
+# documented in docs/ingestion.md. Purely additive: rules above are unchanged.
+ingest:
+  version: 1
+  fields:
+    user_id:
+      type: string
+      description: Principal identity for each record.
+      aliases: [userId, user id, user, principal_id, principal, employee_id, staff_id, uid]
+    transaction_id:
+      required: true
+      type: string
+      aliases: [txn_id, transaction, txn, reference]
+    timestamp:
+      type: string
+      aliases: [time, ts, event_time, event_timestamp, logged_at, datetime]
+    amount:
+      type: number
+      aliases: [transaction_amount, amt, value, total]
+    currency:
+      type: string
+      aliases: [currency_code, ccy]
+    card_number:
+      type: string
+      aliases: [pan, card_no, card, cc_number, credit_card_number]
+    masked_pan:
+      type: string
+      aliases: [masked_card, masked_pan_number, pan_masked]
+    expiry:
+      type: string
+      aliases: [expiry_date, exp_date, expiration, card_expiry]
+    cvv:
+      type: string
+      aliases: [cvv2, cvc, cvv_code, security_code]
+    holder_name:
+      type: string
+      aliases: [cardholder_name, card_holder, name_on_card]
+    event_type:
+      type: string
+      aliases: [event, action, activity, operation]
+    source_ip:
+      type: string
+      aliases: [ip, ip_address, src_ip, client_ip, remote_ip]
+    access_level:
+      type: string
+      aliases: [privilege_level, permission_level, privileges, access]
+    mfa_enabled:
+      type: string
+      aliases: [mfa, multi_factor, two_factor, 2fa]
+    patch_level:
+      type: string
+      aliases: [patch, patch_version, os_patch_level]
+    role:
+      type: string
+      aliases: [user_role, job_role, access_role, position]
+    account_id:
+      type: string
+      aliases: [account, acct_id, account_number, account_no]
+    pin:
+      type: string
+      aliases: [card_pin, pin_code]
+    ssn:
+      type: string
+      aliases: [social_security_number, ssn_number, national_id]
+    track_data:
+      type: string
+      aliases: [track1, track2, magnetic_stripe, track]
+  header_case_insensitive: true
+  trim_values: true

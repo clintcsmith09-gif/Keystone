@@ -19,6 +19,7 @@ from fastapi import FastAPI
 from .config import get_settings
 from .storage import get_storage
 from .uploads.api import router as uploads_router
+from .uploads.preview_api import router as ingest_preview_router
 from .audit.api import router as audit_router
 from .audit.report_api import router as audit_reports_router
 from .audit.quote_api import router as quotes_router
@@ -47,6 +48,7 @@ app = FastAPI(
 )
 
 app.include_router(uploads_router, prefix="/api/v1")
+app.include_router(ingest_preview_router, prefix="/api/v1")
 app.include_router(audit_router, prefix="/api/v1")
 app.include_router(audit_reports_router, prefix="/api/v1")
 app.include_router(quotes_router, prefix="/api/v1")
