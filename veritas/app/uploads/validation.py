@@ -26,6 +26,8 @@ from pathlib import Path
 ALLOWED_TYPES: dict[str, tuple[str, ...]] = {
     ".csv": ("text/csv",),
     ".json": ("application/json",),
+    # Block B: newline-delimited JSON exports (one object per line).
+    ".ndjson": ("application/x-ndjson", "application/json"),
     ".xlsx": ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",),
     ".parquet": ("application/vnd.apache.parquet", "application/octet-stream"),
 }
@@ -75,7 +77,7 @@ def sniff_content(path: Path, ext: str) -> None:
 
     if ext == ".csv":
         _sniff_text_csv(head)
-    elif ext == ".json":
+    elif ext in (".json", ".ndjson"):
         _sniff_json(head)
     elif ext == ".xlsx":
         if not head.startswith(_ZIP_MAGIC):

@@ -1,0 +1,24 @@
+{
+  "export": {
+    "generated_at": "2026-01-02T00:00:00Z",
+    "system": "synthetic-demo"
+  },
+  "data": {
+    "items": [
+      {
+        "userId": "u-001",
+        "user name": "jsmith",
+        "role": "admin",
+        "amount": 120.5,
+        "txn_id": "t-001"
+      },
+      {
+        "userId": "u-002",
+        "user name": "snkosi",
+        "role": "analyst",
+        "amount": 80.0,
+        "txn_id": "t-002"
+      }
+    ]
+  }
+}

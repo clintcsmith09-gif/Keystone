@@ -208,3 +208,55 @@ rules:
     description: Role values must come from an allowlist (least-privilege governance).
     params: { column: role, allowed: [admin, analyst, auditor, compliance, viewer], allow_missing: true }
     llm_assist: false
+
+# --- Ingest profile (Block B) -------------------------------------------------
+# Declares the fields an ISO 27001 audit expects on the normalized ledger and the
+# source-column aliases that map onto them. Consumed by app/audit/profiles.py;
+# documented in docs/ingestion.md. Purely additive: rules above are unchanged.
+ingest:
+  version: 1
+  fields:
+    user_id:
+      required: true
+      type: string
+      description: Principal identity for each access record.
+      aliases: [userId, user id, user, principal_id, principal, employee_id, staff_id, uid]
+    username:
+      type: string
+      description: Login name where a human-readable principal is kept.
+      aliases: [user_name, login, login_name, account_name, sam_account_name]
+    account_id:
+      type: string
+      aliases: [account, acct_id, account_number, account_no]
+    email:
+      type: string
+      aliases: [email_address, mail, e_mail]
+    role:
+      type: string
+      aliases: [user_role, job_role, access_role, position]
+    status:
+      type: string
+      aliases: [user_status, account_status, employment_status, state]
+    timestamp:
+      type: string
+      aliases: [time, ts, event_time, event_timestamp, logged_at, datetime]
+    event_type:
+      type: string
+      aliases: [event, action, activity, operation]
+    source_ip:
+      type: string
+      aliases: [ip, ip_address, src_ip, client_ip, remote_ip]
+    transaction_id:
+      type: string
+      aliases: [txn_id, transaction, txn, reference]
+    classification:
+      type: string
+      aliases: [data_classification, sensitivity, data_class]
+    patch_level:
+      type: string
+      aliases: [patch, patch_version, os_patch_level]
+    backup_time:
+      type: string
+      aliases: [backup_timestamp, last_backup, backup_at]
+  header_case_insensitive: true
+  trim_values: true

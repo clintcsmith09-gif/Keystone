@@ -1,0 +1,3 @@
+User ID;User Name;Role;Event Time;Source IP
+u-001;André du Plessis;admin;2026-01-01T08:00:00Z;10.0.0.5
+u-002;Thandi Mokoena;analyst;2026-01-01T09:30:00Z;10.0.0.6
